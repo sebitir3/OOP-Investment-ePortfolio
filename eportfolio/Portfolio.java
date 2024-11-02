@@ -10,7 +10,7 @@ import java.util.*;
  *
  * @author Sebastian Tiriba
  */
-public class Portfolio {
+public class Portfolio extends Investment{
     private static ArrayList<Stock> listOfStocks = new ArrayList<>();
     private static ArrayList<MutualFund> listOfMutualFunds = new ArrayList<>();
     private static double gainSum = 0;

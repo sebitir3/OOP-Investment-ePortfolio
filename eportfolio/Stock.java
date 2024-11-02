@@ -8,7 +8,7 @@ import java.util.*;
  * 
  * @author Sebastian Tiriba
  */
-public class Stock{
+public class Stock extends Investment{
     private String symbol;
     private String name;
     private int quantity;
