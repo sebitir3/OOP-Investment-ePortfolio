@@ -11,8 +11,9 @@ import java.util.*;
  * @author Sebastian Tiriba
  */
 public class Portfolio{
-    private static ArrayList<Stock> listOfStocks = new ArrayList<>();
+    private static ArrayList<Investment> listOfInvestments = new ArrayList<>();
     private static ArrayList<MutualFund> listOfMutualFunds = new ArrayList<>();
+    private static ArrayList<MutualFund> listOfStocks = new ArrayList<>();
     private static double gainSum = 0;
     // decimal format for getGain
     private static final DecimalFormat df = new DecimalFormat("0.00");
@@ -124,10 +125,12 @@ public class Portfolio{
             boolean foundStockToBuy = false;
 
             // check if stock already exists in array list
-            for (int i = 0; i < listOfStocks.size(); i++) {
-                if (listOfStocks.get(i).getSymbol().equals(symbolToBuy) && !foundStockToBuy) {
+            for (int i = 0; i < listOfInvestments.size(); i++) {
+                if (listOfInvestments.get(i) instanceof Stock && listOfInvestments.get(i).getSymbol().equals(symbolToBuy) && !foundStockToBuy) {
                     // set condition to true so the next iteration doesnt enter loop
                     foundStockToBuy = true;
+
+                    Stock stockInList = (Stock)listOfInvestments.get(i);
 
                     // modify the stock found in the array list
                     System.out.println(symbolToBuy + " was found!");
@@ -137,12 +140,12 @@ public class Portfolio{
                     priceToBuy = priceValidation(scanner, priceToBuy, stockMode);
                     
                     // buy shares of a stock
-                    purchaseBookValue = listOfStocks.get(i).buy(quantityToBuy, priceToBuy);
+                    purchaseBookValue = stockInList.buy(quantityToBuy, priceToBuy);
                     if (quantityToBuy != 1){
-                        System.out.println(quantityToBuy + " shares of " + listOfStocks.get(i).getName() 
+                        System.out.println(quantityToBuy + " shares of " + listOfInvestments.get(i).getName() 
                             + " (" + symbolToBuy + ") were bought at $" + df.format(priceToBuy) + " | Book Value of Purchase: $" + df.format(purchaseBookValue));
                     } else {
-                        System.out.println(quantityToBuy + " share of " + listOfStocks.get(i).getName() 
+                        System.out.println(quantityToBuy + " share of " + listOfInvestments.get(i).getName() 
                             + " (" + symbolToBuy + ") was bought at $" + df.format(priceToBuy) + " | Book Value of Purchase: $" + df.format(purchaseBookValue));
                     }
                     break;
@@ -174,12 +177,12 @@ public class Portfolio{
                 }
   
                 // add stock to array list
-                listOfStocks.add(inputStock);
+                listOfInvestments.add(inputStock);
             }
 
             // BUY A MUTUAL FUND    
 
-        } else if (buyInvestType.equalsIgnoreCase("mutual fund") || buyInvestType.equalsIgnoreCase("m")) {
+        } /*else if (buyInvestType.equalsIgnoreCase("mutual fund") || buyInvestType.equalsIgnoreCase("m")) {
             stockMode = false;
             // enter the symbol of mutual fund user wishes to purchase
             System.out.println("Enter the symbol of the mutual fund you wish to purchase: ");
@@ -241,7 +244,7 @@ public class Portfolio{
                 // add mutual fund to array list
                 listOfMutualFunds.add(inputMutualFund);
             }
-        }
+        }*/
         // clear new line character for next function call in switch case
         scanner.nextLine();
     }
