@@ -104,149 +104,192 @@ public class Portfolio{
         double purchaseBookValue = 0;
 
         System.out.println("Enter the type of investment you want to buy: ");
-        String buyInvestType = scanner.nextLine();
+        String buyInvestType = scanner.nextLine().toLowerCase();
     
         // validate input until user correctly enters stock or mutual fund
-        while (!buyInvestType.equalsIgnoreCase("stock") && !buyInvestType.equalsIgnoreCase("mutual fund") 
-            && !buyInvestType.equalsIgnoreCase("s") && !buyInvestType.equalsIgnoreCase("m")){
+        while (!buyInvestType.equals("stock") && !buyInvestType.equals("mutual fund") && !buyInvestType.equals("s") && !buyInvestType.equals("m")){
             System.out.println("Enter a valid investment type (stock or mutual fund): ");
             buyInvestType = scanner.nextLine();
         }
 
-        // BUY A STOCK
+        // CHECK IF LISTS ARE EMPTY
 
-        if (buyInvestType.equalsIgnoreCase("stock") || buyInvestType.equalsIgnoreCase("s")) {
-            stockMode = true;
-            // enter the symbol of stock user wishes to purchase
-            System.out.println("Enter the symbol of the stock you wish to purchase: ");
+        if(listOfInvestments.isEmpty() && buyInvestType.equalsIgnoreCase("stock") || buyInvestType.equalsIgnoreCase("s")){
+            System.out.println("THE LIST IS EMPTY\nEnter the name of the symbol you would like to purchase: ");
             String symbolToBuy = scanner.nextLine();
+    
+            System.out.println("Enter the name of the stock you would like to purchase: ");
+            String nameToBuy = scanner.nextLine();
+    
+            // ask for quantity and price with validation
+            quantityToBuy = quanityValidation(scanner, quantityToBuy, true);
+            priceToBuy = priceValidation(scanner, priceToBuy, stockMode);
+    
+            Stock inputStock = new Stock(symbolToBuy, nameToBuy, 0, 0, 0);
+    
+            // buy shares of the stock (sets quantity, price, and bookvalue)
+            purchaseBookValue = inputStock.buy(quantityToBuy, priceToBuy);
+            if(quantityToBuy != 1){
+                System.out.println(quantityToBuy + " shares of " + nameToBuy + " (" + symbolToBuy 
+                    + ") were bought at $" + df.format(priceToBuy) + " | Book Value of Purchase: $" + df.format(purchaseBookValue));
+            } else {
+                System.out.println(quantityToBuy + " share of " + nameToBuy + " (" + symbolToBuy 
+                    + ") was bought at $" + df.format(priceToBuy) + " | Book Value of Purchase: $" + df.format(purchaseBookValue));
+            }
+      
+            // add stock to array list
+            listOfInvestments.add(inputStock);
 
-            // boolean to check if stock is found
-            boolean foundStockToBuy = false;
+        } else if (listOfInvestments.isEmpty() && buyInvestType.equalsIgnoreCase("mutual fund") || buyInvestType.equalsIgnoreCase("m")){
+            System.out.println("THE LIST IS EMPTY\nEnter the name of the mutual fund you would like to purchase: ");
+            String symbolToBuy = scanner.nextLine();
+        
+            System.out.println("Enter the name of the mutual fund you would like to purchase: ");
+            String nameToBuy = scanner.nextLine();
 
-            // check if stock already exists in array list
+            // ask for quantity and price with validation
+            quantityToBuy = quanityValidation(scanner, quantityToBuy, true);
+            priceToBuy = priceValidation(scanner, priceToBuy, stockMode);
+
+            MutualFund inputMutualFund = new MutualFund(symbolToBuy, nameToBuy, 0, 0, 0);
+
+            // buy shares of the stock (sets quantity, price, and bookvalue)
+            purchaseBookValue = inputMutualFund.buy(quantityToBuy, priceToBuy);
+            if (quantityToBuy != 1){
+                System.out.println(quantityToBuy + " units of " + nameToBuy + " (" 
+                    + symbolToBuy + ") were bought at $" + df.format(priceToBuy) + " | Book Value of Purchase: $" + df.format(purchaseBookValue));
+            } else {
+                System.out.println(quantityToBuy + " unit of " + nameToBuy + " (" 
+                    + symbolToBuy + ") was bought at $" + df.format(priceToBuy) + " | Book Value of Purchase: $" + df.format(purchaseBookValue));
+            }
+        
+            // add mutual fund to array list
+            listOfInvestments.add(inputMutualFund);
+        } else {
+            // iterate through all investments
             for (int i = 0; i < listOfInvestments.size(); i++) {
-                if (listOfInvestments.get(i) instanceof Stock && listOfInvestments.get(i).getSymbol().equals(symbolToBuy) && !foundStockToBuy) {
-                    // set condition to true so the next iteration doesnt enter loop
-                    foundStockToBuy = true;
 
-                    Stock stockInList = (Stock)listOfInvestments.get(i);
+                if (buyInvestType.equalsIgnoreCase("stock") || buyInvestType.equalsIgnoreCase("s")) {
+                    stockMode = true;
+                    // enter the symbol of stock user wishes to purchase
+                    System.out.println("Enter the symbol of the stock you wish to purchase: ");
+                    String symbolToBuy = scanner.nextLine();
 
-                    // modify the stock found in the array list
-                    System.out.println(symbolToBuy + " was found!");
+                    // boolean to check if stock is found
+                    boolean foundStockToBuy = false;
 
-                    // ask for quantity and price with validation
-                    quantityToBuy = quanityValidation(scanner, quantityToBuy, true);
-                    priceToBuy = priceValidation(scanner, priceToBuy, stockMode);
-                    
-                    // buy shares of a stock
-                    purchaseBookValue = stockInList.buy(quantityToBuy, priceToBuy);
-                    if (quantityToBuy != 1){
-                        System.out.println(quantityToBuy + " shares of " + listOfInvestments.get(i).getName() 
-                            + " (" + symbolToBuy + ") were bought at $" + df.format(priceToBuy) + " | Book Value of Purchase: $" + df.format(purchaseBookValue));
-                    } else {
-                        System.out.println(quantityToBuy + " share of " + listOfInvestments.get(i).getName() 
-                            + " (" + symbolToBuy + ") was bought at $" + df.format(priceToBuy) + " | Book Value of Purchase: $" + df.format(purchaseBookValue));
+                    if (listOfInvestments.get(i) instanceof Stock && listOfInvestments.get(i).getSymbol().equals(symbolToBuy) && !foundStockToBuy) {
+                        // set condition to true so the next iteration doesnt enter loop
+                        foundStockToBuy = true;
+
+                        Stock stockInList = (Stock)listOfInvestments.get(i);
+
+                        // modify the stock found in the array list
+                        System.out.println(symbolToBuy + " was found!");
+
+                        // ask for quantity and price with validation
+                        quantityToBuy = quanityValidation(scanner, quantityToBuy, true);
+                        priceToBuy = priceValidation(scanner, priceToBuy, stockMode);
+                            
+                        // buy shares of a stock
+                        purchaseBookValue = stockInList.buy(quantityToBuy, priceToBuy);
+                        if (quantityToBuy != 1){
+                            System.out.println(quantityToBuy + " shares of " + listOfInvestments.get(i).getName() 
+                                + " (" + symbolToBuy + ") were bought at $" + df.format(priceToBuy) + " | Book Value of Purchase: $" + df.format(purchaseBookValue));
+                        } else {
+                            System.out.println(quantityToBuy + " share of " + listOfInvestments.get(i).getName() 
+                                + " (" + symbolToBuy + ") was bought at $" + df.format(priceToBuy) + " | Book Value of Purchase: $" + df.format(purchaseBookValue));
+                        }
+                        break;
+
+                    } else /*if (!foundStockToBuy)*/ {
+                        System.out.println(symbolToBuy + " was found not found.");
+        
+                        System.out.println("Enter the name of the stock you would like to purchase: ");
+                        String nameToBuy = scanner.nextLine();
+        
+                        // ask for quantity and price with validation
+                        quantityToBuy = quanityValidation(scanner, quantityToBuy, true);
+                        priceToBuy = priceValidation(scanner, priceToBuy, stockMode);
+        
+                        Stock inputStock = new Stock(symbolToBuy, nameToBuy, 0, 0, 0);
+        
+                        // buy shares of the stock (sets quantity, price, and bookvalue)
+                        purchaseBookValue = inputStock.buy(quantityToBuy, priceToBuy);
+                        if(quantityToBuy != 1){
+                            System.out.println(quantityToBuy + " shares of " + nameToBuy + " (" + symbolToBuy 
+                                + ") were bought at $" + df.format(priceToBuy) + " | Book Value of Purchase: $" + df.format(purchaseBookValue));
+                        } else {
+                            System.out.println(quantityToBuy + " share of " + nameToBuy + " (" + symbolToBuy 
+                                + ") was bought at $" + df.format(priceToBuy) + " | Book Value of Purchase: $" + df.format(purchaseBookValue));
+                        }
+        
+                        // add stock to array list
+                        listOfInvestments.add(inputStock);
                     }
-                    break;
+                } else if (buyInvestType.equalsIgnoreCase("mutual fund") || buyInvestType.equalsIgnoreCase("m")) {
+                    stockMode = false;
+                    // enter the symbol of mutual fund user wishes to purchase
+                    System.out.println("Enter the symbol of the mutual fund you wish to purchase: ");
+                    String symbolToBuy = scanner.nextLine();
+        
+                    // boolean to check if stock is found
+                    boolean foundFundToBuy = false;
+        
+                    // check if stock already exists in array list
+                    if (listOfInvestments.get(i) instanceof MutualFund && listOfInvestments.get(i).getSymbol().equals(symbolToBuy) && !foundFundToBuy) {
+                            // set condition to true so the next iteration doesnt enter loop
+                            foundFundToBuy = true;
+        
+                            // modify the mutual fund found in the array list
+                            System.out.println(symbolToBuy + " was found!");
 
-                }
+                            MutualFund fundInList = (MutualFund)listOfInvestments.get(i);
+        
+                            // ask for quantity and price with validation
+                            quantityToBuy = quanityValidation(scanner, quantityToBuy, true);
+                            priceToBuy = priceValidation(scanner, priceToBuy, stockMode);
+        
+                            // buy shares of a stock
+                            purchaseBookValue = fundInList.buy(quantityToBuy, priceToBuy);
+                            if(quantityToBuy != 1){
+                                System.out.println(quantityToBuy + " units of " + fundInList.getName() 
+                                    + " (" + symbolToBuy + ") were bought at $" + df.format(priceToBuy) + " | Book Value of Purchase: $" + df.format(purchaseBookValue));
+                            } else {
+                                System.out.println(quantityToBuy + " unit of " + fundInList.getName() 
+                                    + " (" + symbolToBuy + ") was bought at $" + df.format(priceToBuy) + " | Book Value of Purchase: $" + df.format(purchaseBookValue));
+                            }                   
+                            break;
+                        } else /*if (!foundFundToBuy) */{
+                            System.out.println(symbolToBuy + " was found not found.");
+            
+                            System.out.println("Enter the name of the mutual fund you would like to purchase: ");
+                            String nameToBuy = scanner.nextLine();
+            
+                            // ask for quantity and price with validation
+                            quantityToBuy = quanityValidation(scanner, quantityToBuy, true);
+                            priceToBuy = priceValidation(scanner, priceToBuy, stockMode);
+            
+                            MutualFund inputMutualFund = new MutualFund(symbolToBuy, nameToBuy, 0, 0, 0);
+            
+                            // buy shares of the stock (sets quantity, price, and bookvalue)
+                            purchaseBookValue = inputMutualFund.buy(quantityToBuy, priceToBuy);
+                            if (quantityToBuy != 1){
+                                System.out.println(quantityToBuy + " units of " + nameToBuy + " (" 
+                                    + symbolToBuy + ") were bought at $" + df.format(priceToBuy) + " | Book Value of Purchase: $" + df.format(purchaseBookValue));
+                            } else {
+                                System.out.println(quantityToBuy + " unit of " + nameToBuy + " (" 
+                                    + symbolToBuy + ") was bought at $" + df.format(priceToBuy) + " | Book Value of Purchase: $" + df.format(purchaseBookValue));
+                            }
+                        
+                            // add mutual fund to array list
+                            listOfInvestments.add(inputMutualFund);
+                        }
+                    }
             }
-
-            // if stock not found create NEW STOCK
-            if (!foundStockToBuy) {
-                System.out.println(symbolToBuy + " was found not found.");
-
-                System.out.println("Enter the name of the stock you would like to purchase: ");
-                String nameToBuy = scanner.nextLine();
-
-                // ask for quantity and price with validation
-                quantityToBuy = quanityValidation(scanner, quantityToBuy, true);
-                priceToBuy = priceValidation(scanner, priceToBuy, stockMode);
-
-                Stock inputStock = new Stock(symbolToBuy, nameToBuy, 0, 0, 0);
-
-                // buy shares of the stock (sets quantity, price, and bookvalue)
-                purchaseBookValue = inputStock.buy(quantityToBuy, priceToBuy);
-                if(quantityToBuy != 1){
-                    System.out.println(quantityToBuy + " shares of " + nameToBuy + " (" + symbolToBuy 
-                        + ") were bought at $" + df.format(priceToBuy) + " | Book Value of Purchase: $" + df.format(purchaseBookValue));
-                } else {
-                    System.out.println(quantityToBuy + " share of " + nameToBuy + " (" + symbolToBuy 
-                        + ") was bought at $" + df.format(priceToBuy) + " | Book Value of Purchase: $" + df.format(purchaseBookValue));
-                }
-  
-                // add stock to array list
-                listOfInvestments.add(inputStock);
-            }
-
-            // BUY A MUTUAL FUND    
-
-        } /*else if (buyInvestType.equalsIgnoreCase("mutual fund") || buyInvestType.equalsIgnoreCase("m")) {
-            stockMode = false;
-            // enter the symbol of mutual fund user wishes to purchase
-            System.out.println("Enter the symbol of the mutual fund you wish to purchase: ");
-            String symbolToBuy = scanner.nextLine();
-
-            // boolean to check if stock is found
-            boolean foundFundToBuy = false;
-
-            // check if stock already exists in array list
-            for (int i = 0; i < listOfMutualFunds.size(); i++) {
-                if (listOfMutualFunds.get(i).getSymbol().equals(symbolToBuy) && !foundFundToBuy) {
-                    // set condition to true so the next iteration doesnt enter loop
-                    foundFundToBuy = true;
-
-                    // modify the mutual fund found in the array list
-                    System.out.println(symbolToBuy + " was found!");
-
-                    // ask for quantity and price with validation
-                    quantityToBuy = quanityValidation(scanner, quantityToBuy, true);
-                    priceToBuy = priceValidation(scanner, priceToBuy, stockMode);
-
-                    // buy shares of a stock
-                    purchaseBookValue = listOfMutualFunds.get(i).buy(quantityToBuy, priceToBuy);
-                    if(quantityToBuy != 1){
-                        System.out.println(quantityToBuy + " units of " + listOfMutualFunds.get(i).getName() 
-                            + " (" + symbolToBuy + ") were bought at $" + df.format(priceToBuy) + " | Book Value of Purchase: $" + df.format(purchaseBookValue));
-                    } else {
-                        System.out.println(quantityToBuy + " unit of " + listOfMutualFunds.get(i).getName() 
-                            + " (" + symbolToBuy + ") was bought at $" + df.format(priceToBuy) + " | Book Value of Purchase: $" + df.format(purchaseBookValue));
-                    }                   
-                    break;
-                }
-            }
-
-            // if fund not found create NEW MUTUAL FUND
-            if (!foundFundToBuy) {
-                System.out.println(symbolToBuy + " was found not found.");
-
-                System.out.println("Enter the name of the mutual fund you would like to purchase: ");
-                String nameToBuy = scanner.nextLine();
-
-                // ask for quantity and price with validation
-                quantityToBuy = quanityValidation(scanner, quantityToBuy, true);
-                priceToBuy = priceValidation(scanner, priceToBuy, stockMode);
-
-                MutualFund inputMutualFund = new MutualFund(symbolToBuy, nameToBuy, 0, 0, 0);
-
-                // buy shares of the stock (sets quantity, price, and bookvalue)
-                purchaseBookValue = inputMutualFund.buy(quantityToBuy, priceToBuy);
-                if (quantityToBuy != 1){
-                    System.out.println(quantityToBuy + " units of " + nameToBuy + " (" 
-                        + symbolToBuy + ") were bought at $" + df.format(priceToBuy) + " | Book Value of Purchase: $" + df.format(purchaseBookValue));
-                } else {
-                    System.out.println(quantityToBuy + " unit of " + nameToBuy + " (" 
-                        + symbolToBuy + ") was bought at $" + df.format(priceToBuy) + " | Book Value of Purchase: $" + df.format(purchaseBookValue));
-                }
-               
-
-                // add mutual fund to array list
-                listOfMutualFunds.add(inputMutualFund);
-            }
-        }*/
-        // clear new line character for next function call in switch case
-        scanner.nextLine();
+            // clear new line character for next function call in switch case
+            scanner.nextLine();
+        }
     }
 
     // SELL A STOCK OR MUTUAL FUND
@@ -256,8 +299,6 @@ public class Portfolio{
      * @param scanner - for user inputs
      */
     private void sellInvestments(Scanner scanner){
-        System.out.println("Enter the type of investment you want to sell: ");
-        String sellInvestType = scanner.nextLine();
         int quantityToSell = 0;
         double priceToSell = 0;
         // if selling a stock or mutual fund
@@ -266,15 +307,25 @@ public class Portfolio{
         // book value @ sale
         double saleBookValue;
 
+        System.out.println("Enter the type of investment you want to sell: ");
+        String sellInvestType = scanner.nextLine().toLowerCase();
+        
         // SELL A STOCK
 
-        while (!sellInvestType.equalsIgnoreCase("stock") && !sellInvestType.equalsIgnoreCase("mutual fund")
-                && !sellInvestType.equalsIgnoreCase("s") && !sellInvestType.equalsIgnoreCase("m")){
+        while (!sellInvestType.equals("stock") && !sellInvestType.equals("mutual fund")
+                && !sellInvestType.equals("s") && !sellInvestType.equals("m")){
             System.out.println("Enter the type of a valid investment type (stock or mutual fund): ");
             sellInvestType = scanner.nextLine();
         }
 
-        if (sellInvestType.equalsIgnoreCase("stock") || sellInvestType.equalsIgnoreCase("s")) {
+        // check if investment list is empty
+
+
+        if(listOfInvestments.isEmpty()){
+            System.out.println("You have no stock investments. Please buy stock to be able to sell.");            
+        }
+
+        if (sellInvestType.equals("stock") || sellInvestType.equals("s")) {
             stockMode = true;
             boolean stockListIsEmpty = false;
 
