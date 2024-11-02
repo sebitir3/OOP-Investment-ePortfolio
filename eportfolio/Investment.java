@@ -1,5 +1,11 @@
 package eportfolio;
 
+/**
+ * This class is used for the to initialize investment object
+ * to be used in other children catches such as stock and mutual fund
+ * 
+ * @author Sebastian Tiriba
+ */
 public class Investment {
     private String symbol;
     private String name;
@@ -34,7 +40,7 @@ public class Investment {
     }
 
     /**
-     * This method will return the current value of the mutual fund's symbol
+     * This method will return the current value of the investment symbol
      *
      * @return string value for the current symbol
      */
@@ -46,7 +52,7 @@ public class Investment {
      * This method will set the current of value of the symbol to the string
      * value passed in
      *
-     * @param symbol - value to set mutual fund's symbol
+     * @param symbol - value to set investment's symbol
      */
     public void setSymbol(String symbol) {
         this.symbol = symbol;
@@ -54,7 +60,7 @@ public class Investment {
 
     /**
      * This method will return the current value 
-     * of the mutual fund's name
+     * of the investment's name
      *
      * @return string value for the current name
      */
@@ -66,14 +72,14 @@ public class Investment {
      * This method will set the current of value of the name to the string value
      * passed in
      *
-     * @param name - value to set mutual fund's name
+     * @param name - value to set investment's name
      */
     public void setName(String name) {
         this.name = name;
     }
 
     /**
-     * This method will return the current value of the mutual fund's quanity
+     * This method will return the current value of the investment's quanity
      *
      * @return int value for the current quantity
      */
@@ -85,14 +91,14 @@ public class Investment {
      * This method will set the current of value of the quantity to the int
      * value passed in
      *
-     * @param quantity - value to set mutual fund's quantity
+     * @param quantity - value to set investment's quantity
      */
     public void setQuantity(int quantity) {
         this.quantity = quantity;
     }
 
     /**
-     * This method will return the current value of the mutual fund's price
+     * This method will return the current value of the investment's price
      *
      * @return double value for the current price
      */
@@ -104,14 +110,14 @@ public class Investment {
      * This method will set the current of value of the price to the double
      * value passed in
      *
-     * @param price - value to set mutual fund's price
+     * @param price - value to set investment's price
      */
     public void setPrice(double price) {
         this.price = price;
     }
 
     /**
-     * This method will return the current value of the mutual fund's book value
+     * This method will return the current value of the investment's book value
      *
      * @return double value for the current bookValue
      */
@@ -123,7 +129,7 @@ public class Investment {
      * This method will set the current of value of the bookValue to the double
      * value passed in
      *
-     * @param bookValue - value to set mutual fund's bookValue
+     * @param bookValue - value to set investment's bookValue
      */
     public void setBookValue(double bookValue) {
         this.bookValue = bookValue;
