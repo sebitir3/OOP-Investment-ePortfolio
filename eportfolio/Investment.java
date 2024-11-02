@@ -7,11 +7,11 @@ package eportfolio;
  * @author Sebastian Tiriba
  */
 public class Investment {
-    private String symbol;
-    private String name;
-    private int quantity;
-    private double price;
-    private double bookValue;
+    protected String symbol;
+    protected String name;
+    protected int quantity;
+    protected double price;
+    protected double bookValue;
 
     /**
      * This constructor is the default constructor and does not initialize any

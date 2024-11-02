@@ -114,8 +114,10 @@ public class Portfolio{
 
         // CHECK IF LISTS ARE EMPTY
 
-        if(listOfInvestments.isEmpty() && buyInvestType.equalsIgnoreCase("stock") || buyInvestType.equalsIgnoreCase("s")){
-            System.out.println("THE LIST IS EMPTY\nEnter the name of the symbol you would like to purchase: ");
+
+
+        if(listOfInvestments.isEmpty() && (buyInvestType.equalsIgnoreCase("stock") || buyInvestType.equalsIgnoreCase("s"))){
+            System.out.println("THE LIST IS EMPTY!\nEnter the symbol of the stock you would like to purchase: ");
             String symbolToBuy = scanner.nextLine();
     
             System.out.println("Enter the name of the stock you would like to purchase: ");
@@ -124,9 +126,9 @@ public class Portfolio{
             // ask for quantity and price with validation
             quantityToBuy = quanityValidation(scanner, quantityToBuy, true);
             priceToBuy = priceValidation(scanner, priceToBuy, stockMode);
-    
+
             Stock inputStock = new Stock(symbolToBuy, nameToBuy, 0, 0, 0);
-    
+             
             // buy shares of the stock (sets quantity, price, and bookvalue)
             purchaseBookValue = inputStock.buy(quantityToBuy, priceToBuy);
             if(quantityToBuy != 1){
@@ -136,12 +138,11 @@ public class Portfolio{
                 System.out.println(quantityToBuy + " share of " + nameToBuy + " (" + symbolToBuy 
                     + ") was bought at $" + df.format(priceToBuy) + " | Book Value of Purchase: $" + df.format(purchaseBookValue));
             }
-      
-            // add stock to array list
+
             listOfInvestments.add(inputStock);
 
-        } else if (listOfInvestments.isEmpty() && buyInvestType.equalsIgnoreCase("mutual fund") || buyInvestType.equalsIgnoreCase("m")){
-            System.out.println("THE LIST IS EMPTY\nEnter the name of the mutual fund you would like to purchase: ");
+        } else if (listOfInvestments.isEmpty() && (buyInvestType.equalsIgnoreCase("mutual fund") || buyInvestType.equalsIgnoreCase("m"))){
+            System.out.println("THE LIST IS EMPTY\nEnter the mutual fund of the stock you would like to purchase: ");
             String symbolToBuy = scanner.nextLine();
         
             System.out.println("Enter the name of the mutual fund you would like to purchase: ");
@@ -164,6 +165,7 @@ public class Portfolio{
             }
         
             // add mutual fund to array list
+            System.out.println(inputMutualFund);
             listOfInvestments.add(inputMutualFund);
         } else {
             // iterate through all investments
@@ -287,10 +289,21 @@ public class Portfolio{
                         }
                     }
             }
-            // clear new line character for next function call in switch case
-            scanner.nextLine();
+            
         }
+        // clear new line character for next function call in switch case
+        scanner.nextLine();
     }
+
+
+
+
+
+
+
+
+
+
 
     // SELL A STOCK OR MUTUAL FUND
     /**
@@ -319,42 +332,36 @@ public class Portfolio{
         }
 
         // check if investment list is empty
-
-
         if(listOfInvestments.isEmpty()){
             System.out.println("You have no stock investments. Please buy stock to be able to sell.");            
-        }
+        } 
+        // if not empty iterate throught list and sell stock or mutual fund
+        else {
+            for (int i = 0; i < listOfInvestments.size(); i++) {
+                // SELL STOCK
+                if (sellInvestType.equals("stock") || sellInvestType.equals("s")) {
+                    stockMode = true;
 
-        if (sellInvestType.equals("stock") || sellInvestType.equals("s")) {
-            stockMode = true;
-            boolean stockListIsEmpty = false;
+                    // enter the symbol of stock user wishes to purchase
+                    System.out.println("Enter the symbol of the stock you wish to sell: ");
+                    String symbolToSell = scanner.nextLine();
 
-            // check if stock array list is empty and exit if true
-            if(listOfStocks.isEmpty()){
-                System.out.println("You have no stock investments. Please buy stock to be able to sell.");
-                stockListIsEmpty = true;
-            }
-
-            if(!stockListIsEmpty) {
-                // enter the symbol of stock user wishes to purchase
-                System.out.println("Enter the symbol of the stock you wish to sell: ");
-                String symbolToSell = scanner.nextLine();
-
-                boolean foundStockToSell = false;
-
-                for (int i = 0; i < listOfStocks.size(); i++) {
-                    if (listOfStocks.get(i).getSymbol().equals(symbolToSell) && !foundStockToSell) {
-                        // set condition to true so the next iteration doesnt enter loop
-                        foundStockToSell = true;
-
+                    if (listOfInvestments.get(i) instanceof Stock && listOfInvestments.get(i).getSymbol().equals(symbolToSell)) {
                         // modify the stock found in the array list
                         System.out.println(symbolToSell + " was found!");
 
+                        // create a new stock by downcasting the current investment
+                        Stock stockToSell = (Stock) listOfInvestments.get(i);
+
+                        System.out.println(stockToSell);
+
+                        System.out.println(stockToSell.getQuantity());
+
                         // ask for quantity and price with validation
                         quantityToSell = quanityValidation(scanner, quantityToSell, false);
-                    
+                        
                         // check if quantity to sell is larger than owned stock
-                        while(quantityToSell > listOfStocks.get(i).getQuantity()){
+                        while(quantityToSell > stockToSell.getQuantity()){
                             System.out.println("ERROR: Not enough shares owned to sell.");
                             quantityToSell = quanityValidation(scanner, quantityToSell, false);       
                         }
@@ -363,10 +370,10 @@ public class Portfolio{
                         priceToSell = priceValidation(scanner, priceToSell, stockMode);
 
                         // for full purchase, index is removed so we must store the name of the stock in a temp var
-                        String tempName = listOfStocks.get(i).getName();
-                        
+                        String tempName = stockToSell.getName();
+                            
                         // perform the sale    
-                        saleBookValue = listOfStocks.get(i).sell(quantityToSell, priceToSell, listOfStocks, i);
+                        saleBookValue = stockToSell.sell(quantityToSell, priceToSell, listOfInvestments, i);
                         // sell shares of a stock (if full sale, stock is removed from arraylist)
                         if(quantityToSell != 1){
                             System.out.println(quantityToSell + " shares of " + tempName + 
@@ -379,46 +386,30 @@ public class Portfolio{
 
                     } else {
                         System.out.println("Error: the stock with symbol " + symbolToSell + " was not found.");
-                        System.out.println("No stock was sold.");
+                        System.out.println("No units were sold.");
                         break;
-                    }
+                    } 
                 }
-                // consume new line character
-                scanner.nextLine();
-            }
+                // SELL MUTUAL FUND
+                else if (sellInvestType.equalsIgnoreCase("mutual fund") || sellInvestType.equalsIgnoreCase("m")) {
+                    stockMode = false;
 
-            // SELL A MUTUAL FUND
+                    // enter the symbol of mutual fund user wishes to sell
+                    System.out.println("Enter the symbol of the mutual fund you wish to sell: ");
+                    String symbolToSell = scanner.nextLine();
 
-        } else if (sellInvestType.equalsIgnoreCase("mutual fund") || sellInvestType.equalsIgnoreCase("m")) {
-            stockMode = false;
-
-            boolean fundListIsEmpty = false;
-
-            // check if mutual fund array list is empty and exit if true
-            if(listOfMutualFunds.isEmpty()){
-                System.out.println("You have no mutual fund investments. Please buy mutual funds to be able to sell.");
-                fundListIsEmpty = true;
-            }
-
-            if(!fundListIsEmpty){
-                // enter the symbol of mutual fund user wishes to sell
-                System.out.println("Enter the symbol of the mutual fund you wish to sell: ");
-                String symbolToSell = scanner.nextLine();
-
-                boolean foundFundToSell = false;
-
-                for (int i = 0; i < listOfMutualFunds.size(); i++) {
-                    if (listOfMutualFunds.get(i).getSymbol().equals(symbolToSell) && !foundFundToSell) {
-                        // set condition to true so the next iteration doesnt enter loop
-                        foundFundToSell = true;
+                    if (listOfInvestments.get(i) instanceof MutualFund && listOfMutualFunds.get(i).getSymbol().equals(symbolToSell)) {
 
                         // modify the mutual fund found in the array list
                         System.out.println(symbolToSell + " was found!");
 
+                        // create a new stock by downcasting the current investment
+                        MutualFund fundToSell = (MutualFund)listOfInvestments.get(i);
+
                         // ask for quantity and price with validation
                         quantityToSell = quanityValidation(scanner, quantityToSell, false);
 
-                        while(quantityToSell > listOfMutualFunds.get(i).getQuantity()){
+                         while(quantityToSell > fundToSell.getQuantity()){
                             System.out.println("ERROR: Not enough units owned to sell.");
                             quantityToSell = quanityValidation(scanner, quantityToSell, false);
                         }
@@ -427,10 +418,10 @@ public class Portfolio{
                         priceToSell = priceValidation(scanner, priceToSell, stockMode);
 
                         // for full purchase, index is removed so we must store the name of the stock in a temp var
-                        String tempName = listOfMutualFunds.get(i).getName();
+                        String tempName = fundToSell.getName();
 
                         // perform mutual fund sale
-                        saleBookValue = listOfMutualFunds.get(i).sell(quantityToSell, priceToSell, listOfMutualFunds, i);
+                        saleBookValue = fundToSell.sell(quantityToSell, priceToSell, listOfInvestments, i);
                         // sell units of a mutual fund (if full sale, stock is removed from arraylist)
                         if (quantityToSell != 1) {
                             System.out.println(quantityToSell + " units of " + tempName 
@@ -446,12 +437,10 @@ public class Portfolio{
                         break;
                     }
                 }
-                // consume new line character
-                scanner.nextLine();
-            }     
+            }
         }
-        // clear new line character for next function call in switch case
-        //scanner.nextLine();
+        //clear new line character for next function call in switch case
+        scanner.nextLine();
     }
 
     // UPDATE ALL PRICES OF STOCKS AND MUTUAL FUNDS
@@ -466,31 +455,50 @@ public class Portfolio{
         // update stocks first
         boolean updatingAStock = true;
         // iterate through stocks and update price for each stock
-        if (listOfStocks.isEmpty() && listOfMutualFunds.isEmpty()) {
+        if (listOfInvestments.isEmpty()) {
             System.out.println("There are no investments to update. Please buy investments to update prices.");
         } else {
-            for (int i = 0; i < listOfStocks.size(); i++) {
-                System.out.println("The current price for " + listOfStocks.get(i).getSymbol() + " is: $" + listOfStocks.get(i).getPrice());
+            for (int i = 0; i < listOfInvestments.size(); i++) {
+                // if the current investment is a stock object
+                if(listOfInvestments.get(i) instanceof Stock){
+                    // for price validation
+                    updatingAStock = true;
 
-                double updateStockPrice = 0;
-                updateStockPrice = priceValidationForUpdate(scanner, updateStockPrice, updatingAStock);
+                    // create new stock object by downcasting current investment
+                    Stock updatedStock = (Stock)listOfInvestments.get(i);
 
-                listOfStocks.get(i).setPrice(updateStockPrice);
-                System.out.println("The updated price for " + listOfStocks.get(i).getSymbol() + " is: $" + listOfStocks.get(i).getPrice());
-                System.out.println(""); // spacer
-            }
-            // next update mutual funds
-            updatingAStock = false;
-            // iterate through all mutual funds and update price for each mutual fund
-            for (int i = 0; i < listOfMutualFunds.size(); i++) {
-                System.out.println("The current price for " + listOfMutualFunds.get(i).getSymbol() + " is: $" + listOfMutualFunds.get(i).getPrice());
+                    // print current price
+                    System.out.println("The current price for " + updatedStock.getSymbol() + " is: $" + updatedStock.getPrice());
 
-                double updateFundPrice = 0;
-                updateFundPrice = priceValidationForUpdate(scanner, updateFundPrice, updatingAStock);
+                    // ask user for the updated price and validate
+                    double updatedStockPrice = 0;
+                    updatedStockPrice = priceValidationForUpdate(scanner, updatedStockPrice, updatingAStock);
 
-                listOfMutualFunds.get(i).setPrice(updateFundPrice);
-                System.out.println("The updated price for " + listOfMutualFunds.get(i).getSymbol() + " is: $" + listOfMutualFunds.get(i).getPrice());
-                System.out.println(""); // spacer
+                    updatedStock.setPrice(updatedStockPrice);
+                    System.out.println("The updated price for " + updatedStock.getSymbol() + " is: $" + updatedStock.getPrice());
+                    System.out.println(""); // spacer
+
+                } 
+                // if the current investment is a mutual fund object
+                else if(listOfInvestments.get(i) instanceof MutualFund){
+                    // for price validation
+                    updatingAStock = false;
+
+                    // create new mutual fund object by downcasting current investment
+                    MutualFund updatedFund = (MutualFund)listOfInvestments.get(i);
+
+                    // print current price
+                    System.out.println("The current price for " + updatedFund.getSymbol() + " is: $" + updatedFund.getPrice());
+
+                    // ask user for updated price and validate
+                    double updatedFundPrice = 0;
+                    updatedFundPrice = priceValidationForUpdate(scanner, updatedFundPrice, updatingAStock);
+
+                    updatedFund.setPrice(updatedFundPrice);
+                    System.out.println("The updated price for " + updatedFund.getSymbol() + " is: $" + updatedFund.getPrice());
+                    System.out.println(""); // spacer
+                }
+                
             }
             scanner.nextLine(); // consume \n
         }
@@ -504,16 +512,21 @@ public class Portfolio{
      */
     private void getInvestmentGain(){
         // PRINT GET GAIN TO USER
-        for (int i = 0; i < listOfStocks.size(); i++) {
-            double stockGain = listOfStocks.get(i).getGain(listOfStocks.get(i).getQuantity(), listOfStocks.get(i).getPrice());
-            gainSum += stockGain;
+        for (int i = 0; i < listOfInvestments.size(); i++) {
+            if(listOfInvestments.get(i) instanceof Stock){
+                // create new stock object by downcasting current investment
+                Stock aStock = (Stock)listOfInvestments.get(i);
+
+                double stockGain = aStock.getGain(aStock.getQuantity(), aStock.getPrice());
+                gainSum += stockGain;
+            } else if (listOfInvestments.get(i) instanceof MutualFund){
+                // create new mutual fund object by downcasting current investment
+                MutualFund aFund = (MutualFund)listOfInvestments.get(i);
+
+                double fundGain = aFund.getGain(aFund.getQuantity(), aFund.getPrice());
+                gainSum += fundGain;
+            }        
         }
-        // iterate through all mutual funds and update price for each mutual fund
-        for (int i = 0; i < listOfMutualFunds.size(); i++) {
-            double fundGain = listOfMutualFunds.get(i).getGain(listOfMutualFunds.get(i).getQuantity(), listOfMutualFunds.get(i).getPrice());
-            gainSum += fundGain;
-        }
-        // set decimal format rounding mode to round up
         df.setRoundingMode(RoundingMode.UP);
         // print gain with 2 decimal places
         System.out.println("So far, your potential gain from investestments is: $" + df.format(gainSum));

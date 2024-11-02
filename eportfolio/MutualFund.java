@@ -9,12 +9,6 @@ import java.util.*;
  * @author Sebastian Tiriba
  */
 public class MutualFund extends Investment{
-    private String symbol;
-    private String name;
-    private int quantity;
-    private double price;
-    private double bookValue;
-
     /**
      * This constructor is the default constructor and does not initialize any
      * data for the mutual fund
@@ -72,7 +66,7 @@ public class MutualFund extends Investment{
      * @param i - index of arrayList of stocks to remove at full sale
      * @return the gain of the partial or full sale of the mutual fund
      */
-    public double sell(int sellQuantity, double salePrice, ArrayList<MutualFund> inputList, int i){
+    public double sell(int sellQuantity, double salePrice, ArrayList<Investment> inputList, int i){
         // vars for calculating book value 
         double payment = sellQuantity * salePrice - 9.99;
         double gain;
@@ -134,7 +128,7 @@ public class MutualFund extends Investment{
      */
     @Override
     public String toString() {
-        return name + " (" + symbol + ") | Owned: " + quantity + " | Price: $"
+        return getName() + " (" + getSymbol() + ") | Owned: " + quantity + " | Price: $"
             + String.format("%.2f", price) + " | Book value: $" + String.format("%.2f", bookValue);
     }
 
