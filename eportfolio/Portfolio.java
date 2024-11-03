@@ -1,5 +1,6 @@
 package eportfolio;
 
+import java.lang.reflect.Array;
 import java.math.*;
 import java.text.DecimalFormat;
 import java.util.*;
@@ -526,7 +527,7 @@ public class Portfolio{
         boolean foundStock = true;
 
         HashMap<String, ArrayList<Integer>> index = new HashMap<String,ArrayList<Integer>>();
-        //ArrayList<Integer> keyAt = new ArrayList<>();
+        ArrayList<Integer> keyWordIndices = new ArrayList<>();
 
         // found counter
         int foundCount = 0;
@@ -545,84 +546,113 @@ public class Portfolio{
                     // If the keyword is contained in the current investment name
                     if (investmentName.contains(keyword)) {
                         // Check if the keyword is already in the map
-                        ArrayList<Integer> indices = index.get(keyword);
-                        if (indices == null) {
+                        /*ArrayList<Integer>*/ keyWordIndices = index.get(keyword);
+                        if (keyWordIndices == null) {
                             // If not present, create a new ArrayList and add it to the map
-                            indices = new ArrayList<>();
-                            index.put(keyword, indices);
+                            keyWordIndices = new ArrayList<>();
+                            index.put(keyword, keyWordIndices);
                         }
                         // Add the current index if not already in the list
-                        if (!indices.contains(i)) {
-                            indices.add(i);
+                        if (!keyWordIndices.contains(i)) {
+                            keyWordIndices.add(i);
                         }
-                        System.out.println(index);
+                        
                     }
                 }
-            }
-                    
-            // check if symbol is not empty
-            if(!symbolSearch.isEmpty()){
-                // check if symbol is not equal to current stock
-                if(!listOfInvestments.get(i).getSymbol().equalsIgnoreCase(symbolSearch.split(" ")[0])){
-                    // set to false and don't print stock
-                    foundStock = false;
-                }
-            }
 
-            // check if price range not empty
-            if(!rangeSearch.isEmpty()){
-                // if the range has - in it, it means its not an exact value
-                if(rangeSearch.contains("-")){
-                    // set upper and lower bounds
-                    String[] bounds = rangeSearch.split("-");
-                    String lowerBound = bounds[0].trim();
-                    String upperBound;
-                    if (bounds.length > 1){
-                        upperBound = bounds[1].trim();
-                    } else {
-                        upperBound = "";
+                // ITERSECT ALL SIMILAR INDICIES FOR EACH KEYWORD
+                // new array list to store the intersected indicides
+                ArrayList<Integer> intersectedIndices = new ArrayList<>();
+                if(!keyWordIndices.isEmpty()){
+                    // put the first keyowrd in the intersectedIndicies array list
+                    if (index.containsKey(keywords[0])) {
+                        intersectedIndices.addAll(index.get(keywords[0]));
                     }
-
-                    // check if lower bound is not empty
-                    if(!lowerBound.isEmpty()){
-                        double lowerValue = Double.parseDouble(lowerBound);
-                        // see if stock price falls below lower bound
-                        // if so dont print the stock
-                        if (listOfInvestments.get(i).getPrice() < lowerValue){
-                            foundStock = false;
-                        }
-                    }
-
-                    // check if upper bound is not empty
-                    if (!upperBound.isEmpty()) {
-                        double upperValue = Double.parseDouble(upperBound);
-                        // see if stock price is above upper bound
-                        // if so dont print stock
-                        if (listOfInvestments.get(i).getPrice() > upperValue) {
-                            foundStock = false;
+                
+                    // Intersect with indices of remaining keywords
+                    for (String keyword : keywords) {
+                        ArrayList<Integer> keywordIndices = index.get(keyword);
+                        if (keywordIndices != null) {
+                            // retain all indices after the first
+                            intersectedIndices.retainAll(keywordIndices);
                         }
                     }
                 } else {
-                    double exactPrice = Double.parseDouble(rangeSearch);
-                    // see if stock doesn't match exact price
-                    // if so, dont print stock
-                    if(listOfInvestments.get(i).getPrice() != exactPrice) {
+                    // If no keywords are provided, include all indices
+                    for (int j = 0; j < listOfInvestments.size(); j++) {
+                        intersectedIndices.add(j);
+                    }
+                }
+                System.out.println(intersectedIndices);
+
+
+                // SYMBOL AND RANGE CHECK
+
+                // check if symbol is not empty
+                if(!symbolSearch.isEmpty()){
+                    // check if symbol is not equal to current stock
+                    if(!listOfInvestments.get(i).getSymbol().equalsIgnoreCase(symbolSearch.split(" ")[0])){
+                        // set to false and don't print stock
                         foundStock = false;
                     }
                 }
+
+                // check if price range not empty
+                if(!rangeSearch.isEmpty()){
+                    // if the range has - in it, it means its not an exact value
+                    if(rangeSearch.contains("-")){
+                        // set upper and lower bounds
+                        String[] bounds = rangeSearch.split("-");
+                        String lowerBound = bounds[0].trim();
+                        String upperBound;
+                        if (bounds.length > 1){
+                            upperBound = bounds[1].trim();
+                        } else {
+                            upperBound = "";
+                        }
+
+                        // check if lower bound is not empty
+                        if(!lowerBound.isEmpty()){
+                            double lowerValue = Double.parseDouble(lowerBound);
+                            // see if stock price falls below lower bound
+                            // if so dont print the stock
+                            if (listOfInvestments.get(i).getPrice() < lowerValue){
+                                foundStock = false;
+                            }
+                        }
+
+                        // check if upper bound is not empty
+                        if (!upperBound.isEmpty()) {
+                            double upperValue = Double.parseDouble(upperBound);
+                            // see if stock price is above upper bound
+                            // if so dont print stock
+                            if (listOfInvestments.get(i).getPrice() > upperValue) {
+                                foundStock = false;
+                            }
+                        }
+                    } else {
+                        double exactPrice = Double.parseDouble(rangeSearch);
+                        // see if stock doesn't match exact price
+                        // if so, dont print stock
+                        if(listOfInvestments.get(i).getPrice() != exactPrice) {
+                            foundStock = false;
+                        }
+                    }
+                }
+
+                // if condition maintains true (survived all filters), then print
+                if(foundStock){
+                    System.out.println(listOfInvestments.get(i).toString());
+                    foundCount ++;
+                }
+
             }
 
-            // if condition maintains true (survived all filters), then print
-            if(foundStock){
-                System.out.println(listOfInvestments.get(i).toString());
-                foundCount ++;
+            if (foundCount == 0){
+                System.out.println("No investments found.");
             }
 
-        }
-
-        if (foundCount == 0){
-            System.out.println("No investments found.");
-        }
+        }     
     }
 
     // INPUT VALIDATION HELPERS FOR BUY AND SELL
