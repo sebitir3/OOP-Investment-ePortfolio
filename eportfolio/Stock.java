@@ -115,7 +115,7 @@ public class Stock extends Investment{
     public double getGain(int sellQuantity, double salePrice) {
         double payment = sellQuantity * salePrice - 9.99;
 
-        // ASSUME FULL SALE FOR GET GAIN
+        // ASSUME FULL SALE FOR GET GAINq
         double gain = payment - this.bookValue;
         return gain;
     }
