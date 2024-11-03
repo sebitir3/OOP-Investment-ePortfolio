@@ -526,7 +526,7 @@ public class Portfolio{
         boolean foundStock = true;
 
         HashMap<String, ArrayList<Integer>> index = new HashMap<String,ArrayList<Integer>>();
-        ArrayList<Integer> keyAt = new ArrayList<>();
+        //ArrayList<Integer> keyAt = new ArrayList<>();
 
         // found counter
         int foundCount = 0;
@@ -534,26 +534,32 @@ public class Portfolio{
         // search through all stocks
         for (int i = 0; i < listOfInvestments.size(); i++) {
             
-            // check if keywords is not empty
-            if(!keywordSearch.isEmpty()){
-                // check if all keywords are not found
+            String investmentName = listOfInvestments.get(i).getName();
+
+             // Check if keywords are provided
+            if (!keywordSearch.isEmpty()) {
                 String[] keywords = keywordSearch.split(" ");
-                // check each keyword
-                for (int j = 0; j < keywords.length; j++){
-                    String keyword = keywords[j];
-                    // if each keyword is not contained in current stock
-                    System.out.println(j + " " + keyword);
-                    if(listOfInvestments.get(i).getName().contains(keyword)){
-                        System.out.println(listOfInvestments.get(i).getName());
-                        keyAt.add(i);
-                        index.put(keyword, keyAt);
+
+                // Check each keyword
+                for (String keyword : keywords) {
+                    // If the keyword is contained in the current investment name
+                    if (investmentName.contains(keyword)) {
+                        // Check if the keyword is already in the map
+                        ArrayList<Integer> indices = index.get(keyword);
+                        if (indices == null) {
+                            // If not present, create a new ArrayList and add it to the map
+                            indices = new ArrayList<>();
+                            index.put(keyword, indices);
+                        }
+                        // Add the current index if not already in the list
+                        if (!indices.contains(i)) {
+                            indices.add(i);
+                        }
+                        System.out.println(index);
                     }
                 }
             }
-
-            System.out.println(index);
-            
-            
+                    
             // check if symbol is not empty
             if(!symbolSearch.isEmpty()){
                 // check if symbol is not equal to current stock
