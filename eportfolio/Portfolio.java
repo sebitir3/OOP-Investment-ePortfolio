@@ -99,6 +99,9 @@ public class Portfolio{
         double priceToBuy = 0;
         // if buying a stock or mutual fund
         boolean stockMode = false;
+        
+        // condition if investment symbol is a different investment type
+        boolean symbolError = false;
 
         // book value when purchased
         double purchaseBookValue = 0;
@@ -124,7 +127,13 @@ public class Portfolio{
 
             // iterate through all investments
             for (int i = 0; i < listOfInvestments.size(); i++) {
-                if (listOfInvestments.get(i) instanceof Stock && listOfInvestments.get(i).getSymbol().equals(symbolToBuy)) {
+                // check if the symbol is a mutual fund and print error if true
+                if (listOfInvestments.get(i) instanceof MutualFund && symbolToBuy.equals(listOfInvestments.get(i).getSymbol())){
+                    System.out.println("Error. This symbol already exists as a mutual fund.");
+                    symbolError = true;
+                } 
+                // find stock in investment list and buy stock
+                else if (listOfInvestments.get(i) instanceof Stock && listOfInvestments.get(i).getSymbol().equals(symbolToBuy)) {
                     Stock stockInList = (Stock)listOfInvestments.get(i);
                     investmentFound = true;
                     // modify the stock found in the array list
@@ -148,7 +157,7 @@ public class Portfolio{
 
             } 
                     
-            if(!investmentFound) {
+            if(!investmentFound && !symbolError) {
                 System.out.println(symbolToBuy + " was found not found.");
         
                 System.out.println("Enter the name of the stock you would like to purchase: ");
@@ -181,8 +190,13 @@ public class Portfolio{
             String symbolToBuy = scanner.nextLine();
         
             for (int i = 0; i < listOfInvestments.size(); i++) {
-                // check if stock already exists in array list
-                if (listOfInvestments.get(i) instanceof MutualFund && listOfInvestments.get(i).getSymbol().equals(symbolToBuy)) {
+                // check if the symbol is a stock and print error if true
+                if (listOfInvestments.get(i) instanceof Stock && symbolToBuy.equals(listOfInvestments.get(i).getSymbol())){
+                    System.out.println("Error. This symbol already exists as a stock.");
+                    symbolError = true;
+                } 
+                // check if mutual fund already exists in array list
+                else if (listOfInvestments.get(i) instanceof MutualFund && listOfInvestments.get(i).getSymbol().equals(symbolToBuy)) {
                     // set condition to true so the next iteration doesnt enter loop
                     investmentFound = true;
     
@@ -209,7 +223,7 @@ public class Portfolio{
                 }
             }
 
-            if(!investmentFound){
+            if(!investmentFound && !symbolError){
                 System.out.println(symbolToBuy + " was found not found.");
             
                 System.out.println("Enter the name of the mutual fund you would like to purchase: ");
@@ -236,8 +250,9 @@ public class Portfolio{
             }
         }
             
-        scanner.nextLine();  // clear new line character for next function call in switch case
-
+        if(!symbolError){
+            scanner.nextLine();  // clear new line character for next function call in switch case
+        }
     }
        
     // SELL AN INVESTMENT
