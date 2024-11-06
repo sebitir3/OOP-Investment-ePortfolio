@@ -105,6 +105,11 @@ public class MutualFund extends Investment{
         }
     }
 
+    public double getPayment(int sellQuantity, double salePrice){
+        double payment = sellQuantity * salePrice - fee;
+        return payment;
+    }
+
     /**
      * This method calculates the theoretical gain of a mutual fund (as if it were a
      * full sale) and returns it to be printed in main (sale fee of 45.00

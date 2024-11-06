@@ -326,13 +326,17 @@ public class Portfolio{
                             
                             // perform the sale    
                             saleBookValue = stockSold.sell(quantityToSell, priceToSell, listOfInvestments, i);
+
+                            // get the payment on the stock sold
+                            double stockPayment = stockSold.getPayment(quantityToSell, priceToSell);
+
                             // sell shares of a stock (if full sale, stock is removed from arraylist)
                             if(quantityToSell != 1){
                                 System.out.println(quantityToSell + " shares of " + tempName + 
-                                    " (" + symbolToSell + ") were sold at $" + df.format(priceToSell) + " | Book Value of Sale: $" + df.format(saleBookValue));
+                                    " (" + symbolToSell + ") were sold at $" + df.format(priceToSell) + " | Book Value of Sale: $" + df.format(saleBookValue) + " | Payment on Sale: $" + df.format(stockPayment));
                             } else {
                                 System.out.println(quantityToSell + " share of " + tempName + 
-                                    " (" + symbolToSell + ") was sold at $" + df.format(priceToSell) + " | Book Value of Sale: $" + df.format(saleBookValue));
+                                    " (" + symbolToSell + ") was sold at $" + df.format(priceToSell) + " | Book Value of Sale: $" + df.format(saleBookValue) + " | Payment on Sale: $" + df.format(stockPayment));
                             } 
                              
                             // consume new line character
@@ -393,13 +397,17 @@ public class Portfolio{
 
                             // perform mutual fund sale
                             saleBookValue = fundSold.sell(quantityToSell, priceToSell, listOfInvestments, i);
+
+                            // get the payment on the stock sold
+                            double fundPayment = fundSold.getPayment(quantityToSell, priceToSell);
+
                             // sell units of a mutual fund (if full sale, stock is removed from arraylist)
                             if (quantityToSell != 1) {
                                 System.out.println(quantityToSell + " units of " + tempName 
-                                    + " (" + symbolToSell + ") were sold at $" + df.format(priceToSell) + " | Book Value of Sale: $" + df.format(saleBookValue));
+                                    + " (" + symbolToSell + ") were sold at $" + df.format(priceToSell) + " | Book Value of Sale: $" + df.format(saleBookValue) + " | Payment on Sale: $" + df.format(fundPayment));
                             } else {
                                 System.out.println(quantityToSell + " unit of " + tempName
-                                    + " (" + symbolToSell + ") was sold at $" + df.format(priceToSell) + " | Book Value of Sale: $" + df.format(saleBookValue));
+                                    + " (" + symbolToSell + ") was sold at $" + df.format(priceToSell) + " | Book Value of Sale: $" + df.format(saleBookValue) + " | Payment on Sale: $" + df.format(fundPayment));
                             }
                             // consume new line character
                             scanner.nextLine();
