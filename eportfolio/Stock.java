@@ -9,6 +9,9 @@ import java.util.*;
  * @author Sebastian Tiriba
  */
 public class Stock extends Investment{
+    // fee constant
+    private static final double fee = 9.99;
+
     /**
      * This constructor is the default constructor and does not initialize
      * any data for the stock
@@ -42,7 +45,7 @@ public class Stock extends Investment{
      */
     public double buy(int addedQuantity, double newPrice) {
         this.quantity += addedQuantity;
-        double buyBookValue = addedQuantity * newPrice + 9.99;
+        double buyBookValue = addedQuantity * newPrice + fee;
         this.bookValue += buyBookValue;
         this.price = newPrice;
 
@@ -68,7 +71,7 @@ public class Stock extends Investment{
      */
     public double sell(int sellQuantity, double salePrice, ArrayList<Investment> inputList, int i) {
         // vars for calculating book value 
-        double payment = sellQuantity * salePrice - 9.99;
+        double payment = sellQuantity * salePrice - fee;
         double gain;
 
         // FULL SALE
@@ -113,7 +116,7 @@ public class Stock extends Investment{
      * @return theoretical gain of the stock
      */
     public double getGain(int sellQuantity, double salePrice) {
-        double payment = sellQuantity * salePrice - 9.99;
+        double payment = sellQuantity * salePrice - fee;
 
         // ASSUME FULL SALE FOR GET GAINq
         double gain = payment - this.bookValue;

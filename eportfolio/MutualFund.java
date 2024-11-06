@@ -9,6 +9,8 @@ import java.util.*;
  * @author Sebastian Tiriba
  */
 public class MutualFund extends Investment{
+    // fee constant
+    private static final double fee = 45.00;
     /**
      * This constructor is the default constructor and does not initialize any
      * data for the mutual fund
@@ -68,7 +70,7 @@ public class MutualFund extends Investment{
      */
     public double sell(int sellQuantity, double salePrice, ArrayList<Investment> inputList, int i){
         // vars for calculating book value 
-        double payment = sellQuantity * salePrice - 9.99;
+        double payment = sellQuantity * salePrice - fee;
         double gain;
 
         // FULL SALE
@@ -113,7 +115,7 @@ public class MutualFund extends Investment{
      * @return theoretical gain of the mutual fund
      */
     public double getGain(int sellQuantity, double salePrice) {
-        double payment = sellQuantity * salePrice - 45.00;
+        double payment = sellQuantity * salePrice - fee;
 
         // ASSUME FULL SALE FOR GET GAIN
         double gain = payment - this.bookValue;
