@@ -1,4 +1,4 @@
-package eportfolio;
+package ePortfolio;
 
 /**
  * This class is used for the to initialize investment object
