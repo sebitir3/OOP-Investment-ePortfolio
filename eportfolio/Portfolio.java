@@ -527,7 +527,7 @@ public class Portfolio{
         System.out.println("Enter the symbol to search for (optional: leave blank to not search for any symbol)");
         String symbolSearch = scanner.nextLine().trim();
         System.out.println("Enter keywords seperated by spaces to search for (optional: leave blank to not search for any keywords)");
-        String keywordSearch = scanner.nextLine().trim();
+        String keywordSearch = scanner.nextLine().trim().toLowerCase();
         System.out.println("Enter a price range seperated to search for (optional: leave blank to not search for any range)");
         String rangeSearch = scanner.nextLine().trim();
 
@@ -543,7 +543,7 @@ public class Portfolio{
         // search through all stocks
         for (int i = 0; i < listOfInvestments.size(); i++) {
             
-            String investmentName = listOfInvestments.get(i).getName();
+            String investmentName = listOfInvestments.get(i).getName().toLowerCase();
 
              // Check if keywords are provided
             if (!keywordSearch.isEmpty()) {
