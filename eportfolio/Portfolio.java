@@ -491,21 +491,20 @@ public class Portfolio{
      * gain of all their stocks and mutual funds
      */
     private void getInvestmentGain(){
+        gainSum = 0;
         // PRINT GET GAIN TO USER
         for (int i = 0; i < listOfInvestments.size(); i++) {
             if(listOfInvestments.get(i) instanceof Stock){
                 // create new stock object by downcasting current investment
                 Stock aStock = (Stock)listOfInvestments.get(i);
-
+                // add to the gain sum
                 double stockGain = aStock.getGain(aStock.getQuantity(), aStock.getPrice());
-                System.out.println(stockGain);
                 gainSum += stockGain;
             } else if (listOfInvestments.get(i) instanceof MutualFund){
                 // create new mutual fund object by downcasting current investment
                 MutualFund aFund = (MutualFund)listOfInvestments.get(i);
-
+                // add to the gain sum
                 double fundGain = aFund.getGain(aFund.getQuantity(), aFund.getPrice());
-                System.out.println(fundGain);
                 gainSum += fundGain;
             }        
         }
