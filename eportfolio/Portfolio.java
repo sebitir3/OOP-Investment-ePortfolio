@@ -633,6 +633,8 @@ public class Portfolio{
                             foundStock = false;
                         }
                     }
+                } else if (!rangeSearch.contains("-")){
+                    System.out.println("Error: invalid range! Please enter a valid range that contains '-'.");
                 } else {
                     double exactPrice = Double.parseDouble(rangeSearch);
                     // see if stock doesn't match exact price
