@@ -1,5 +1,7 @@
 package ePortfolio;
 
+import java.text.DecimalFormat;
+
 /**
  * This class is used for the to initialize investment object
  * to be used in other children catches such as stock and mutual fund
@@ -12,6 +14,8 @@ public class Investment {
     protected int quantity;
     protected double price;
     protected double bookValue;
+
+    private static final DecimalFormat df = new DecimalFormat("0.00");
 
     /**
      * This constructor is the default constructor and does not initialize any
@@ -122,7 +126,7 @@ public class Investment {
      * @return double value for the current bookValue
      */
     public double getBookValue() {
-        return bookValue;
+        return Double.parseDouble(df.format(bookValue));
     }
 
     /**

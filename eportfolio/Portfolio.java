@@ -142,6 +142,7 @@ public class Portfolio{
 
                 case "q":
                 case "quit":
+                    portfolio.writeInvestments(filePath);
                     System.out.println("Exiting program...");
                     System.exit(0);
 
@@ -865,5 +866,24 @@ public class Portfolio{
             }
         }
         return validPrice;
+    }
+
+    private void writeInvestments(String filename) {
+        try (PrintWriter writer = new PrintWriter(new FileWriter(filename))) {
+            for (Investment investment : listOfInvestments) {
+                writer.println("type = \"" + (investment instanceof Stock ? "stock" : "mutualfund") + "\"");
+                writer.println("symbol = \"" + investment.getSymbol() + "\"");
+                writer.println("name = \"" + investment.getName() + "\"");
+                writer.println("quantity = \"" + investment.getQuantity() + "\"");
+                writer.println("price = \"" + investment.getPrice() + "\"");
+                writer.println("bookValue = \"" + investment.getBookValue() + "\"");
+                writer.println(); // Blank line between investments
+            }
+
+            System.out.println("Investments saved to file.");
+
+        } catch (IOException e) {
+            System.out.println("Error writing to file.");
+        }
     }
 }
