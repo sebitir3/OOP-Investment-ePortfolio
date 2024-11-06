@@ -685,7 +685,7 @@ public class Portfolio{
                 validQuantity = scanner.nextInt();
 
                 // only exit loop if value is positive integer
-                if (validQuantity < 0){
+                if (validQuantity <= 0){
                     System.out.println("Enter a positive quantity.");
                 } else {
                     validInput = true;
@@ -725,7 +725,7 @@ public class Portfolio{
                 validPrice = scanner.nextDouble();
 
                 // only exit the loop if price is a positive number
-                if (validPrice < 0){
+                if (validPrice <= 0){
                     System.out.println("Enter a positive price.");
                 } else {
                     validInput = true;
@@ -765,7 +765,7 @@ public class Portfolio{
                 validPrice = scanner.nextDouble();
 
                 // only exit the loop if price is a positive number
-                if (validPrice < 0){
+                if (validPrice <= 0){
                     System.out.println("Enter a positive price.");
                 } else {
                     validInput = true;
