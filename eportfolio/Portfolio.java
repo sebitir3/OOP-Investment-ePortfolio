@@ -1,5 +1,6 @@
 package ePortfolio;
 
+import java.io.*;
 import java.math.*;
 import java.text.DecimalFormat;
 import java.util.*;
@@ -31,6 +32,71 @@ public class Portfolio{
         // create new portfolio object
         Portfolio portfolio = new Portfolio();
 
+        // FILE LOADING
+        // set the current working directory
+        String currentDir = new File(".").getAbsolutePath();
+        // construct the absolute path for the file
+        String filePath = null;
+
+        if (args.length < 1) {
+            filePath = currentDir + "/ePortfolio/default.txt";
+            File file = new File(filePath);
+            if (!file.exists()) {
+                try {
+                    // Create the file if it doesn't exist
+                    file.getParentFile().mkdirs();  // Ensure the directory exists
+                    file.createNewFile();
+                    //System.out.println("New file created at: " + file.getAbsolutePath());
+                } catch (IOException e) {
+                    System.out.println("Error creating file.");
+                    System.exit(1);
+                }
+            }
+        } else {
+            filePath = currentDir + "/ePortfolio/" + args[0] + ".txt";
+        }
+
+        // file scanner
+        Scanner inputStream = null;
+        try {
+            // set file scanner to the correct file stream
+            inputStream = new Scanner(new FileInputStream(filePath));
+            Investment readInvestment = null;
+            // loop until file ends
+            while(inputStream.hasNextLine()){
+                // scan a line
+                
+                String line = inputStream.nextLine().trim();
+                
+                if (line.startsWith("type")) {
+                    String type = line.split("=")[1].trim().replace("\"", "");
+                    System.out.println(type);
+
+                    if (type.equalsIgnoreCase("stock")) {
+                        readInvestment = new Stock();
+                        System.out.println("test");
+                    } else if (type.equalsIgnoreCase("mutualfund")) {
+                        readInvestment = new MutualFund();
+                    } else {
+                        System.out.println("Error: Unrecognized investment type '" + type + "'");
+                    }
+                } else if (line.startsWith("symbol")) {
+                    readInvestment.setSymbol(line.split("=")[1].trim().replace("\"", ""));
+                } else if (line.startsWith("name")) {
+                    readInvestment.setName(line.split("=")[1].trim().replace("\"", ""));
+                } else if (line.startsWith("quantity")) {
+                    readInvestment.setQuantity(Integer.parseInt(line.split("=")[1].trim().replace("\"", "")));
+                } else if (line.startsWith("price")) {
+                    readInvestment.setPrice(Double.parseDouble(line.split("=")[1].trim().replace("\"", "")));
+                } else if (line.startsWith("bookValue")) {
+                    readInvestment.setBookValue(Double.parseDouble(line.split("=")[1].trim().replace("\"", "")));
+                    listOfInvestments.add(readInvestment); // Add investment when all details are set
+                }
+            }
+            System.out.println("Investments loaded from file.");
+        } catch (Exception e) {
+            System.out.println("Error reading file.");
+        }
 
         do {
             System.out.println("""
@@ -463,14 +529,14 @@ public class Portfolio{
                     Stock updatedStock = (Stock)listOfInvestments.get(i);
 
                     // print current price
-                    System.out.println("The current price for " + updatedStock.getSymbol() + " is: $" + updatedStock.getPrice());
+                    System.out.println("The current price for " + updatedStock.getSymbol() + " is: $" + df.format(updatedStock.getPrice()));
 
                     // ask user for the updated price and validate
                     double updatedStockPrice = 0;
                     updatedStockPrice = priceValidationForUpdate(scanner, updatedStockPrice, updatingAStock);
 
                     updatedStock.setPrice(updatedStockPrice);
-                    System.out.println("The updated price for " + updatedStock.getSymbol() + " is: $" + updatedStock.getPrice());
+                    System.out.println("The updated price for " + updatedStock.getSymbol() + " is: $" + df.format(updatedStock.getPrice()));
                     System.out.println(""); // spacer
 
                 } 
@@ -483,14 +549,14 @@ public class Portfolio{
                     MutualFund updatedFund = (MutualFund)listOfInvestments.get(i);
 
                     // print current price
-                    System.out.println("The current price for " + updatedFund.getSymbol() + " is: $" + updatedFund.getPrice());
+                    System.out.println("The current price for " + updatedFund.getSymbol() + " is: $" + df.format(updatedFund.getPrice()));
 
                     // ask user for updated price and validate
                     double updatedFundPrice = 0;
                     updatedFundPrice = priceValidationForUpdate(scanner, updatedFundPrice, updatingAStock);
 
                     updatedFund.setPrice(updatedFundPrice);
-                    System.out.println("The updated price for " + updatedFund.getSymbol() + " is: $" + updatedFund.getPrice());
+                    System.out.println("The updated price for " + updatedFund.getSymbol() + " is: $" + df.format(updatedFund.getPrice()));
                     System.out.println(""); // spacer
                 }
                 
