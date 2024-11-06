@@ -32,7 +32,8 @@ public class Portfolio{
         // create new portfolio object
         Portfolio portfolio = new Portfolio();
 
-        // FILE LOADING
+        // FILE PATH FOR READING AND WRITING
+
         // set the current working directory
         String currentDir = new File(".").getAbsolutePath();
         // construct the absolute path for the file
@@ -56,47 +57,10 @@ public class Portfolio{
             filePath = currentDir + "/ePortfolio/" + args[0] + ".txt";
         }
 
-        // file scanner
-        Scanner inputStream = null;
-        try {
-            // set file scanner to the correct file stream
-            inputStream = new Scanner(new FileInputStream(filePath));
-            Investment readInvestment = null;
-            // loop until file ends
-            while(inputStream.hasNextLine()){
-                // scan a line
-                
-                String line = inputStream.nextLine().trim();
-                
-                if (line.startsWith("type")) {
-                    String type = line.split("=")[1].trim().replace("\"", "");
-                    System.out.println(type);
+        // load in investments from file
 
-                    if (type.equalsIgnoreCase("stock")) {
-                        readInvestment = new Stock();
-                        System.out.println("test");
-                    } else if (type.equalsIgnoreCase("mutualfund")) {
-                        readInvestment = new MutualFund();
-                    } else {
-                        System.out.println("Error: Unrecognized investment type '" + type + "'");
-                    }
-                } else if (line.startsWith("symbol")) {
-                    readInvestment.setSymbol(line.split("=")[1].trim().replace("\"", ""));
-                } else if (line.startsWith("name")) {
-                    readInvestment.setName(line.split("=")[1].trim().replace("\"", ""));
-                } else if (line.startsWith("quantity")) {
-                    readInvestment.setQuantity(Integer.parseInt(line.split("=")[1].trim().replace("\"", "")));
-                } else if (line.startsWith("price")) {
-                    readInvestment.setPrice(Double.parseDouble(line.split("=")[1].trim().replace("\"", "")));
-                } else if (line.startsWith("bookValue")) {
-                    readInvestment.setBookValue(Double.parseDouble(line.split("=")[1].trim().replace("\"", "")));
-                    listOfInvestments.add(readInvestment); // Add investment when all details are set
-                }
-            }
-            System.out.println("Investments loaded from file.");
-        } catch (Exception e) {
-            System.out.println("Error reading file.");
-        }
+        portfolio.loadInvestments(filePath);
+
 
         do {
             System.out.println("""
@@ -866,6 +830,50 @@ public class Portfolio{
             }
         }
         return validPrice;
+    }
+
+    private void loadInvestments(String filename){
+        // file scanner
+        Scanner inputStream = null;
+        try {
+            // set file scanner to the correct file stream
+            inputStream = new Scanner(new FileInputStream(filename));
+            Investment readInvestment = null;
+            // loop until file ends
+            while(inputStream.hasNextLine()){
+                // scan a line
+                
+                String line = inputStream.nextLine().trim();
+                
+                if (line.startsWith("type")) {
+                    String type = line.split("=")[1].trim().replace("\"", "");
+                    System.out.println(type);
+
+                    if (type.equalsIgnoreCase("stock")) {
+                        readInvestment = new Stock();
+                        System.out.println("test");
+                    } else if (type.equalsIgnoreCase("mutualfund")) {
+                        readInvestment = new MutualFund();
+                    } else {
+                        System.out.println("Error: Unrecognized investment type '" + type + "'");
+                    }
+                } else if (line.startsWith("symbol")) {
+                    readInvestment.setSymbol(line.split("=")[1].trim().replace("\"", ""));
+                } else if (line.startsWith("name")) {
+                    readInvestment.setName(line.split("=")[1].trim().replace("\"", ""));
+                } else if (line.startsWith("quantity")) {
+                    readInvestment.setQuantity(Integer.parseInt(line.split("=")[1].trim().replace("\"", "")));
+                } else if (line.startsWith("price")) {
+                    readInvestment.setPrice(Double.parseDouble(line.split("=")[1].trim().replace("\"", "")));
+                } else if (line.startsWith("bookValue")) {
+                    readInvestment.setBookValue(Double.parseDouble(line.split("=")[1].trim().replace("\"", "")));
+                    listOfInvestments.add(readInvestment); // Add investment when all details are set
+                }
+            }
+            System.out.println("Investments loaded from file.");
+        } catch (Exception e) {
+            System.out.println("Error reading file.");
+        }
     }
 
     private void writeInvestments(String filename) {
