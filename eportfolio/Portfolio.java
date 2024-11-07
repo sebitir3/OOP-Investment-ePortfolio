@@ -327,151 +327,6 @@ public class Portfolio{
                 System.out.println("Enter the type of a valid investment type (stock or mutual fund): ");
                 sellInvestType = scanner.nextLine();
             }
-
-            // SELL A STOCK 
-            /*
-            if (sellInvestType.equals("stock") || sellInvestType.equals("s")) {
-                stockMode = true;
-                noStocks = false;
-
-                int counter = 0;
-
-                for (int i = 0; i < listOfInvestments.size(); i++) {
-                    if(listOfInvestments.get(i) instanceof Stock){
-                        counter++;
-                    }
-                }
-
-                if(counter == 0){
-                    noStocks = true;
-                    System.out.println("No stocks are owned. Please buy stocks to sell stocks.");
-                }
-
-                // if there are investments
-                if(!noStocks) {
-                    // enter the symbol of stock user wishes to purchase
-                    System.out.println("Enter the symbol of the stock you wish to sell: ");
-                    String symbolToSell = scanner.nextLine();
-                    
-                    for (int i = 0; i < listOfInvestments.size(); i++) {                    
-                        if (listOfInvestments.get(i) instanceof Stock && listOfInvestments.get(i).getSymbol().equals(symbolToSell)) {
-
-                            Stock stockSold = (Stock) listOfInvestments.get(i);
-
-                            // modify the stock found in the array list
-                            System.out.println(symbolToSell + " was found!");
-
-                            // ask for quantity and price with validation
-                            quantityToSell = quanityValidation(scanner, quantityToSell, false);
-                        
-                            // check if quantity to sell is larger than owned stock
-                            while(quantityToSell > stockSold.getQuantity()){
-                                System.out.println("ERROR: Not enough shares owned to sell.");
-                                quantityToSell = quanityValidation(scanner, quantityToSell, false);       
-                            }
-
-                            // validate input price to sell
-                            priceToSell = priceValidation(scanner, priceToSell, stockMode);
-
-                            // for full purchase, index is removed so we must store the name of the stock in a temp var
-                            String tempName = stockSold.getName();
-                            
-                            // perform the sale    
-                            saleBookValue = stockSold.sell(quantityToSell, priceToSell, listOfInvestments, i);
-
-                            // get the payment on the stock sold
-                            double stockPayment = stockSold.getPayment(quantityToSell, priceToSell);
-
-                            // sell shares of a stock (if full sale, stock is removed from arraylist)
-                            if(quantityToSell != 1){
-                                System.out.println(quantityToSell + " shares of " + tempName + 
-                                    " (" + symbolToSell + ") were sold at $" + df.format(priceToSell) + " | Book Value of Sale: $" + df.format(saleBookValue) + " | Payment on Sale: $" + df.format(stockPayment));
-                            } else {
-                                System.out.println(quantityToSell + " share of " + tempName + 
-                                    " (" + symbolToSell + ") was sold at $" + df.format(priceToSell) + " | Book Value of Sale: $" + df.format(saleBookValue) + " | Payment on Sale: $" + df.format(stockPayment));
-                            } 
-                             
-                            // consume new line character
-                            scanner.nextLine();            
-
-                        } else {
-                            System.out.println("Error: the stock with symbol " + symbolToSell + " was not found.");
-                            System.out.println("No stock was sold.");
-                            break;
-                        }
-                    }
-                   
-                }
-
-            // SELL A MUTUAL FUND
-            } else if (sellInvestType.equalsIgnoreCase("mutual fund") || sellInvestType.equalsIgnoreCase("m")) {
-                stockMode = false;
-
-                int counter = 0;
-
-                for (int i = 0; i < listOfInvestments.size(); i++) {
-                    if(listOfInvestments.get(i) instanceof MutualFund){
-                        counter++;
-                    }
-                }
-
-                if(counter == 0){
-                    noMutualFunds = true;
-                    System.out.println("No mutual funds are owned. Please buy mutual funds to sell stocks.");
-                }
-
-                if(!noMutualFunds){
-                    // enter the symbol of mutual fund user wishes to sell
-                    System.out.println("Enter the symbol of the mutual fund you wish to sell: ");
-                    String symbolToSell = scanner.nextLine();
-
-                    
-                    for (int i = 0; i < listOfInvestments.size(); i++) {
-                        if (listOfInvestments.get(i) instanceof MutualFund && listOfInvestments.get(i).getSymbol().equals(symbolToSell)) {
-                            MutualFund fundSold = (MutualFund) listOfInvestments.get(i);
-
-                            // modify the mutual fund found in the array list
-                            System.out.println(symbolToSell + " was found!");
-
-                            // ask for quantity and price with validation
-                            quantityToSell = quanityValidation(scanner, quantityToSell, false);
-
-                            while(quantityToSell > fundSold.getQuantity()){
-                                System.out.println("ERROR: Not enough units owned to sell.");
-                                quantityToSell = quanityValidation(scanner, quantityToSell, false);
-                            }
-
-                            // validate input price to sell
-                            priceToSell = priceValidation(scanner, priceToSell, stockMode);
-
-                            // for full purchase, index is removed so we must store the name of the stock in a temp var
-                            String tempName = fundSold.getName();
-
-                            // perform mutual fund sale
-                            saleBookValue = fundSold.sell(quantityToSell, priceToSell, listOfInvestments, i);
-
-                            // get the payment on the stock sold
-                            double fundPayment = fundSold.getPayment(quantityToSell, priceToSell);
-
-                            // sell units of a mutual fund (if full sale, stock is removed from arraylist)
-                            if (quantityToSell != 1) {
-                                System.out.println(quantityToSell + " units of " + tempName 
-                                    + " (" + symbolToSell + ") were sold at $" + df.format(priceToSell) + " | Book Value of Sale: $" + df.format(saleBookValue) + " | Payment on Sale: $" + df.format(fundPayment));
-                            } else {
-                                System.out.println(quantityToSell + " unit of " + tempName
-                                    + " (" + symbolToSell + ") was sold at $" + df.format(priceToSell) + " | Book Value of Sale: $" + df.format(saleBookValue) + " | Payment on Sale: $" + df.format(fundPayment));
-                            }
-                            // consume new line character
-                            scanner.nextLine();
-                        } else {
-                            System.out.println("Error: the mutual fund with symbol " + symbolToSell + " was not found.");
-                            System.out.println("No units were sold.\n");
-                            break;
-                        }
-                    }
-                   
-                }     
-            }   */
            
             // enter the symbol of investment user wishes to purchase
             if(sellInvestType.equalsIgnoreCase("stock") || sellInvestType.equalsIgnoreCase("s")){
@@ -508,20 +363,24 @@ public class Portfolio{
 
             for (int i = 0; i < listOfInvestments.size(); i++){
                 if(!noInvestments && !sellFound){
+                    // SELL A STOCK
                     if (sellInvestType.equals("stock") || sellInvestType.equals("s")) {
                         stockMode = true;
                         noStocks = false;
         
+                        // if no stocks owned dont sell
                         if(noStocks){
                             System.out.println("No stocks are owned. Please buy stocks to sell stocks.");
                         }
                         
                         // if there are stocks
-                        else if(!noStocks) {              
+                        else if(!noStocks) {       
+                            // is the investmen is a stock and symbol matches       
                             if (listOfInvestments.get(i) instanceof Stock && listOfInvestments.get(i).getSymbol().equals(symbolToSell)) {
-
+                                // a sale is found
                                 sellFound = true;
 
+                                // create stock object
                                 Stock stockSold = (Stock) listOfInvestments.get(i);
 
                                 // modify the stock found in the array list
@@ -560,7 +419,7 @@ public class Portfolio{
                                 // consume new line character
                                 scanner.nextLine();            
 
-                            } else {
+                            } else if (!noStocks && !sellFound) {
                                 System.out.println("Error: the stock with symbol " + symbolToSell + " was not found.");
                                 System.out.println("No stock was sold.");
                                 break;
@@ -578,7 +437,6 @@ public class Portfolio{
                         }
 
                         else if(!noMutualFunds){                
-                            
                             if (listOfInvestments.get(i) instanceof MutualFund && listOfInvestments.get(i).getSymbol().equals(symbolToSell)) {
                                 sellFound = true;
 
@@ -618,29 +476,19 @@ public class Portfolio{
                                 // consume new line character
                                 scanner.nextLine();
                             } 
-                        } else {
+                        } else if (!noMutualFunds && !sellFound){
                             System.out.println("Error: the mutual fund with symbol " + symbolToSell + " was not found.");
                             System.out.println("No units were sold.\n");            
                         }
                     
                     }
-                } else if (!sellFound) {
+                } else if (!sellFound && noInvestments) {
                     System.out.println("Error: no investments owned. Please buy investments to sell.");
                 }
             }
         }
-
-            
-
-            
-
-
-
-
-
     }
       
-   
     // UPDATE ALL PRICES OF STOCKS AND MUTUAL FUNDS
     /**
      * This methods allows the user to update all prices
@@ -698,7 +546,7 @@ public class Portfolio{
                 }
                 
             }
-            scanner.nextLine(); // consume \n
+            scanner.nextLine(); // consume new line character
         }
         
     }
