@@ -105,6 +105,13 @@ public class MutualFund extends Investment{
         }
     }
 
+     /**
+     * This method returns the payment of the sale of a mutual fund
+     * 
+     * @param sellQuantity - the theoretical quantity being sold
+     * @param salePrice - the theoretical sale price
+     * @return theoretical gain of the stock
+     */
     public double getPayment(int sellQuantity, double salePrice){
         double payment = sellQuantity * salePrice - fee;
         return payment;

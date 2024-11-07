@@ -852,6 +852,11 @@ public class Portfolio{
         return validPrice;
     }
 
+    /**
+     * This methods loads all investments into the investment array list from a file
+     * 
+     * @param filename - the file name to load from
+     */
     private void loadInvestments(String filename){
         // file scanner
         Scanner inputStream = null;
@@ -894,6 +899,11 @@ public class Portfolio{
         }
     }
 
+    /**
+     * This methods writes all investments from the investment array list into a file
+     * 
+     * @param filename - the file name to load from
+     */
     private void writeInvestments(String filename) {
         try (PrintWriter writer = new PrintWriter(new FileWriter(filename))) {
             for (Investment investment : listOfInvestments) {
