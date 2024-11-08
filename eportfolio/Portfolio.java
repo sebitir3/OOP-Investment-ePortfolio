@@ -28,7 +28,7 @@ public class Portfolio{
         // create scanner object      
         Scanner scanner = new Scanner(System.in);
         // initialize switch statement var
-        String input = null;
+        String input;
         // create new portfolio object
         Portfolio portfolio = new Portfolio();
 
@@ -37,7 +37,7 @@ public class Portfolio{
         // set the current working directory
         String currentDir = new File(".").getAbsolutePath();
         // construct the absolute path for the file
-        String filePath = null;
+        String filePath;
 
         if (args.length < 1) {
             filePath = currentDir + "/ePortfolio/default.txt";
@@ -310,10 +310,38 @@ public class Portfolio{
         // book value @ sale
         double saleBookValue;
 
+        // stock and mutual fund counters
+        int stockCounter = 0;
+        int fundCounter = 0;
+
+        // user input investment symbol
+        String symbolToSell = "";
+
+
+
         // check if investment list is empty and exit if true
         if(listOfInvestments.isEmpty()){
             System.out.println("You have no investments. Please buy investments to be able to sell.");
             noInvestments = true;
+        }
+
+        // counters that check if stock or funds are present in investments
+        for (int i = 0; i < listOfInvestments.size(); i++) {
+            if (listOfInvestments.get(i) instanceof Stock) {
+                stockCounter++;
+            } else if (listOfInvestments.get(i) instanceof MutualFund) {
+                fundCounter++;
+            }
+        }
+
+        // no stock condtion set
+        if (stockCounter == 0) {
+            noStocks = true;
+        }
+
+        // no mutual fund condition set
+        if (fundCounter == 0) {
+            noMutualFunds = true;
         }
 
         // there are investments in the list ask user what they want to sell
@@ -328,53 +356,34 @@ public class Portfolio{
                 sellInvestType = scanner.nextLine();
             }
            
-            // enter the symbol of investment user wishes to purchase
+            // enter the symbol of investment user wishes to sell
             if(sellInvestType.equalsIgnoreCase("stock") || sellInvestType.equalsIgnoreCase("s")){
-                System.out.println("Enter the symbol of the stock you wish to sell: ");
+                if(noStocks){
+                    System.out.println("No stocks are owned. Please buy stocks to sell stocks.");
+                } else {
+                    System.out.println("Enter the symbol of the stock you wish to sell: "); 
+                    // enter the symbol of stock user wishes to sell
+                    symbolToSell = scanner.nextLine();
+                }   
             } else if (sellInvestType.equalsIgnoreCase("mutual fund") || sellInvestType.equalsIgnoreCase("m")){
-                System.out.println("Enter the symbol of the mutual fund you wish to sell: ");
-            }
-            
-            // enter the symbol of stock user wishes to purchase
-            String symbolToSell = scanner.nextLine();
-
-            // stock and mutual fund counters
-            int stockCounter = 0;
-            int fundCounter = 0;
-
-            // counters that check if stock or funds are present in investments
-            for (int i = 0; i < listOfInvestments.size(); i++) {
-                if(listOfInvestments.get(i) instanceof Stock){
-                    stockCounter++;
-                } else if(listOfInvestments.get(i) instanceof MutualFund){
-                    fundCounter++;
+                if(noMutualFunds){
+                    System.out.println("No mutual funds are owned. Please buy mutual funds to sell mutual funds.");
+                } else {
+                    System.out.println("Enter the symbol of the mutual fund you wish to sell: ");
+                    // enter the symbol of mutual fund user wishes to sell
+                    symbolToSell = scanner.nextLine();
                 }
             }
 
-            if(stockCounter == 0){
-                noStocks = true;
-                //System.out.println("No stocks are owned. Please buy stocks to sell stocks.");
-            } 
-            
-            if(fundCounter == 0){
-                noMutualFunds = true;
-                //System.out.println("No stocks are owned. Please buy stocks to sell stocks.");
-            }
-
+            // iterate through all investments
             for (int i = 0; i < listOfInvestments.size(); i++){
                 if(!noInvestments && !sellFound){
                     // SELL A STOCK
                     if (sellInvestType.equals("stock") || sellInvestType.equals("s")) {
                         stockMode = true;
-                        noStocks = false;
-        
-                        // if no stocks owned dont sell
-                        if(noStocks){
-                            System.out.println("No stocks are owned. Please buy stocks to sell stocks.");
-                        }
                         
                         // if there are stocks
-                        else if(!noStocks) {       
+                        if(!noStocks) {       
                             // is the investmen is a stock and symbol matches       
                             if (listOfInvestments.get(i) instanceof Stock && listOfInvestments.get(i).getSymbol().equals(symbolToSell)) {
                                 // a sale is found
@@ -432,12 +441,9 @@ public class Portfolio{
                     else if (sellInvestType.equalsIgnoreCase("mutual fund") || sellInvestType.equalsIgnoreCase("m")) {
                         stockMode = false;
 
-                        if(noMutualFunds){
-                            System.out.println("No mutual funds are owned. Please buy mutual funds to sell stocks.");
-                        }
-
-                        else if(!noMutualFunds){                
+                        if(!noMutualFunds){                
                             if (listOfInvestments.get(i) instanceof MutualFund && listOfInvestments.get(i).getSymbol().equals(symbolToSell)) {
+                                // a sale is found
                                 sellFound = true;
 
                                 MutualFund fundSold = (MutualFund) listOfInvestments.get(i);
@@ -475,10 +481,12 @@ public class Portfolio{
                                 }
                                 // consume new line character
                                 scanner.nextLine();
-                            } 
-                        } else if (!noMutualFunds && !sellFound){
-                            System.out.println("Error: the mutual fund with symbol " + symbolToSell + " was not found.");
-                            System.out.println("No units were sold.\n");            
+
+                            } else if (!noMutualFunds && !sellFound){
+                                System.out.println("Error: the mutual fund with symbol " + symbolToSell + " was not found.");
+                                System.out.println("No units were sold.");      
+                                break;   
+                            }    
                         }
                     
                     }
@@ -596,7 +604,8 @@ public class Portfolio{
         System.out.println("Enter a price range seperated to search for (optional: leave blank to not search for any range)");
         String rangeSearch = scanner.nextLine().trim();
 
-        boolean foundStock = true;
+        boolean foundInvestment = true;
+        boolean isValidRange = true;
 
         HashMap<String, ArrayList<Integer>> index = new HashMap<String,ArrayList<Integer>>();
         ArrayList<Integer> keyWordIndices = new ArrayList<>();
@@ -607,7 +616,7 @@ public class Portfolio{
         
         // search through all stocks
         for (int i = 0; i < listOfInvestments.size(); i++) {
-            
+            // store the name of the investment in a string
             String investmentName = listOfInvestments.get(i).getName().toLowerCase();
 
              // Check if keywords are provided
@@ -655,26 +664,28 @@ public class Portfolio{
             }
             // if no keywords are provided, include all indices in the intersectedIndices array list
             else {
-                for (int j = 0; j < listOfInvestments.size(); j++) {
-                    intersectedIndices.add(j);
-                }
+                intersectedIndices.add(i);
             }
         }
                
         // SYMBOL AND RANGE CHECK
         // iterate through intersectedIndices array list to check for symbol and range
-        for (Integer j : intersectedIndices) {
+        for (int j = 0; j < intersectedIndices.size(); j++) {
+            // set true for every investment in the list, then check set false each loop if criteria not met
+            foundInvestment = true;
+            
             // check if symbol is not empty
             if(!symbolSearch.isEmpty()){
                 // check if symbol is not equal to current stock
-                if(!listOfInvestments.get(j).getSymbol().equalsIgnoreCase(symbolSearch.split(" ")[0])){
+                if(!listOfInvestments.get(j).getSymbol().equalsIgnoreCase(symbolSearch)){
                     // set to false and don't print stock
-                    foundStock = false;
+                    //System.out.println(listOfInvestments.get(j).getSymbol());
+                    foundInvestment = false;
                 }
             }
 
             // check if price range not empty
-            if(!rangeSearch.isEmpty()){
+            if(!rangeSearch.isEmpty() && isValidRange){
                 // if the range has - in it, it means its not an exact value
                 if(rangeSearch.contains("-")){
                     // set upper and lower bounds
@@ -693,7 +704,7 @@ public class Portfolio{
                         // see if stock price falls below lower bound
                         // if so dont print the stock
                         if (listOfInvestments.get(j).getPrice() < lowerValue){
-                            foundStock = false;
+                            foundInvestment = false;
                         }
                     }
 
@@ -703,29 +714,34 @@ public class Portfolio{
                         // see if stock price is above upper bound
                         // if so dont print stock
                         if (listOfInvestments.get(j).getPrice() > upperValue) {
-                            foundStock = false;
+                            foundInvestment = false;
                         }
                     }
-                } else if (!rangeSearch.contains("-")){
+                // check for invalid range
+                } else if (rangeSearch.contains(" ")){
                     System.out.println("Error: invalid range! Please enter a valid range that contains '-'.");
+                    foundInvestment = false;
+                    isValidRange = false;
+                    
                 } else {
                     double exactPrice = Double.parseDouble(rangeSearch);
                     // see if stock doesn't match exact price
                     // if so, dont print stock
                     if(listOfInvestments.get(j).getPrice() != exactPrice) {
-                        foundStock = false;
+                        foundInvestment = false;
                     }
                 }
             }
 
             // if condition maintains true (survived all filters), then print
-            if(foundStock){
+            if(foundInvestment && isValidRange){
                 System.out.println(listOfInvestments.get(j).toString());
                 foundCount ++;
             }
         }
-            
-        if (foundCount == 0){
+        
+        // no investments found
+        if (foundCount == 0 && isValidRange){
             System.out.println("No investments found.");
         }
 

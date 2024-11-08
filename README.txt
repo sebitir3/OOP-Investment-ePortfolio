@@ -25,9 +25,9 @@ word (stock, mutual fund) or the first letter of each (s, m) all case insensitiv
 3) USER GUIDE:
 Compilition and execution:
 Run the following in a terminal from the main project folder (i.e. stiriba_a1) 
-$ javac eportfolio/*.java
-$ jar cvfe A1.jar eportfolio.Portfolio eportfolio/*.class
-$ java -jar A1.jar
+$ javac ePortfolio/*.java
+$ jar cvfe A2.jar ePortfolio.Portfolio ePortfolio/*.class
+$ java -jar A2.jar
 
 A menu of options will then be presented to the user.
 First, (1) Buy option should be selected first to buy your investment

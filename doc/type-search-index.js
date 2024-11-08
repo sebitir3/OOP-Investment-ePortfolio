@@ -1,1 +1,1 @@
-typeSearchIndex = [{"l":"All Classes and Interfaces","u":"allclasses-index.html"},{"p":"eportfolio","l":"MutualFund"},{"p":"eportfolio","l":"Portfolio"},{"p":"eportfolio","l":"Stock"}];updateSearchResults();
+typeSearchIndex = [{"l":"All Classes and Interfaces","u":"allclasses-index.html"},{"p":"ePortfolio","l":"Investment"},{"p":"ePortfolio","l":"MutualFund"},{"p":"ePortfolio","l":"Portfolio"},{"p":"ePortfolio","l":"Stock"}];updateSearchResults();

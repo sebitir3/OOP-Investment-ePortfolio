@@ -9,10 +9,25 @@ import java.text.DecimalFormat;
  * @author Sebastian Tiriba
  */
 public class Investment {
+    /**
+     * variable for an invesments symbol
+     */
     protected String symbol;
+    /**
+     * variable for an invesments name
+     */
     protected String name;
+    /**
+     * variable for an invesments quantity
+     */
     protected int quantity;
+    /**
+     * variable for an invesments price
+     */
     protected double price;
+    /**
+     * variable for an invesments bookvalue
+     */
     protected double bookValue;
 
     private static final DecimalFormat df = new DecimalFormat("0.00");
