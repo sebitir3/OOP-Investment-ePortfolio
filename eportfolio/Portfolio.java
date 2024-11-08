@@ -12,10 +12,14 @@ import java.util.*;
  * @author Sebastian Tiriba
  */
 public class Portfolio{
+    // vars for investments
     private static ArrayList<Investment> listOfInvestments = new ArrayList<>();
-    //private static ArrayList<MutualFund> listOfMutualFunds = new ArrayList<>();
-    //private static ArrayList<MutualFund> listOfStocks = new ArrayList<>();
     private static double gainSum = 0;
+
+    // keyword hashmap
+    private static HashMap<String, ArrayList<Integer>> index = new HashMap<String,ArrayList<Integer>>();
+    private static ArrayList<Integer> keywordIndices = new ArrayList<>();
+
     // decimal format for getGain
     private static final DecimalFormat df = new DecimalFormat("0.00");
 
@@ -69,6 +73,8 @@ public class Portfolio{
             filePath = currentDir + "/ePortfolio/default.txt";
         }
 
+        portfolio.updateHash(listOfInvestments, index, keywordIndices);
+
 
         do {
             System.out.println("""
@@ -114,11 +120,9 @@ public class Portfolio{
 
                 case "q":
                 case "quit":
-                    if (isDefaultCase){
-
-                    }
                     portfolio.writeInvestments(filePath);
                     System.out.println("Exiting program...");
+                    portfolio.updateHash(listOfInvestments, index, keywordIndices);
                     System.exit(0);
 
                 default:
@@ -292,6 +296,8 @@ public class Portfolio{
                 listOfInvestments.add(inputMutualFund);
             }
         }
+
+        updateHash(listOfInvestments, index, keywordIndices);
           
         // clear new line unless duplicate sequence
         if(!duplicateSymbol){
@@ -327,8 +333,6 @@ public class Portfolio{
 
         // user input investment symbol
         String symbolToSell = "";
-
-
 
         // check if investment list is empty and exit if true
         if(listOfInvestments.isEmpty()){
@@ -438,16 +442,9 @@ public class Portfolio{
                                     
                                 // consume new line character
                                 scanner.nextLine();            
-
-                            } else if (!noStocks && !sellFound) {
-                                System.out.println("Error: the stock with symbol " + symbolToSell + " was not found.");
-                                System.out.println("No stock was sold.");
-                                break;
                             }
                         }
-                        
                     } 
-                    
                     // SELL A MUTUAL FUND
                     else if (sellInvestType.equalsIgnoreCase("mutual fund") || sellInvestType.equalsIgnoreCase("m")) {
                         stockMode = false;
@@ -493,19 +490,26 @@ public class Portfolio{
                                 // consume new line character
                                 scanner.nextLine();
 
-                            } else if (!noMutualFunds && !sellFound){
-                                System.out.println("Error: the mutual fund with symbol " + symbolToSell + " was not found.");
-                                System.out.println("No units were sold.");      
-                                break;   
-                            }    
+                            } 
                         }
                     
                     }
-                } else if (!sellFound && noInvestments) {
+                } 
+                else if (!sellFound && noInvestments) {
                     System.out.println("Error: no investments owned. Please buy investments to sell.");
-                }
+                } 
+            } 
+            
+            if(!sellFound && stockMode){
+                System.out.println("Error: the stock with symbol " + symbolToSell + " was not found.");
+                System.out.println("No shares were sold.");            
+            } else if (!sellFound && !stockMode){
+                System.out.println("Error: the mutual fund with symbol " + symbolToSell + " was not found.");
+                System.out.println("No units were sold.");            
             }
         }
+
+        updateHash(listOfInvestments, index, keywordIndices);
     }
       
     // UPDATE ALL PRICES OF STOCKS AND MUTUAL FUNDS
@@ -567,7 +571,6 @@ public class Portfolio{
             }
             scanner.nextLine(); // consume new line character
         }
-        
     }
 
     // GET GAIN ON INVESTMENTS FROM STOCK AND MUTUAL FUNDS
@@ -618,70 +621,54 @@ public class Portfolio{
         boolean foundInvestment = true;
         boolean isValidRange = true;
 
-        HashMap<String, ArrayList<Integer>> index = new HashMap<String,ArrayList<Integer>>();
-        ArrayList<Integer> keyWordIndices = new ArrayList<>();
+        //HashMap<String, ArrayList<Integer>> index = new HashMap<String,ArrayList<Integer>>();
+        //ArrayList<Integer> keywordIndices = new ArrayList<>();
         ArrayList<Integer> intersectedIndices = new ArrayList<>();
 
         // found counter
         int foundCount = 0;
+
+        // tokenize keywords into an array
+        String[] keywords = keywordSearch.split(" ");
         
-        // search through all stocks
-        for (int i = 0; i < listOfInvestments.size(); i++) {
-            // store the name of the investment in a string
-            String investmentName = listOfInvestments.get(i).getName().toLowerCase();
+        // search through keywords in hashmap
+        
+        if (!keywordSearch.isEmpty()) {
+            // ITERSECT ALL SIMILAR INDICIES FOR EACH KEYWORD
+            for (int j = 0; j < keywords.length; j++) {
+                String keyword = keywords[j];
+                //System.out.println(keyword);
 
-             // Check if keywords are provided
-            if (!keywordSearch.isEmpty()) {
-                // tokenize keywords into an array
-                String[] keywords = keywordSearch.split(" ");
+                // put the first keyowrd in the intersectedIndicies array list
+                if (index.containsKey(keyword)) {
+                    ArrayList<Integer> keywordIndices = index.get(keyword);
+                    //System.out.println(keywordIndices);
 
-                // Check each keyword
-                for (String keyword : keywords) {
-                    // If the keyword is contained in the current investment name
-                    if (investmentName.contains(keyword)) {
-                        // Check if the keyword is already in the map
-                        keyWordIndices = index.get(keyword);
-                        if (keyWordIndices == null) {
-                            // If not present, create a new ArrayList and add it to the map
-                            keyWordIndices = new ArrayList<>();
-                            index.put(keyword, keyWordIndices);
-                        }
-                        // Add the current index if not already in the list
-                        if (!keyWordIndices.contains(i)) {
-                            keyWordIndices.add(i);
-                        }
-                        
+                    // add all indices to intersectedIndices for the first keyword
+                    if (j == 0){
+                        intersectedIndices.addAll(keywordIndices);
+                    } else {
+                        // retain all indices after the first
+                        intersectedIndices.retainAll(keywordIndices);
                     }
+                } else {
+                    intersectedIndices.clear();
+                    break;
                 }
-
-                // ITERSECT ALL SIMILAR INDICIES FOR EACH KEYWORD
-                // new array list to store the intersected indicides
-                intersectedIndices = new ArrayList<>();
-                if(!keyWordIndices.isEmpty()){
-                    // put the first keyowrd in the intersectedIndicies array list
-                    if (index.containsKey(keywords[0])) {
-                        intersectedIndices.addAll(index.get(keywords[0]));
-                    }
-                
-                    // Intersect with indices of remaining keywords
-                    for (String keyword : keywords) {
-                        ArrayList<Integer> keywordIndices = index.get(keyword);
-                        if (keywordIndices != null) {
-                            // retain all indices after the first
-                            intersectedIndices.retainAll(keywordIndices);
-                        }
-                    }
-                } 
-            }
-            // if no keywords are provided, include all indices in the intersectedIndices array list
-            else {
-                intersectedIndices.add(i);
-            }
+            }    
         }
+        // if no keywords are provided, include all indices in the intersectedIndices array list
+        else {
+            for (int i = 0; i < listOfInvestments.size(); i++) {
+                intersectedIndices.add(i);
+            }     
+        }
+
+        //System.out.println(intersectedIndices);        
                
         // SYMBOL AND RANGE CHECK
         // iterate through intersectedIndices array list to check for symbol and range
-        for (int j = 0; j < intersectedIndices.size(); j++) {
+        for (Integer j : intersectedIndices) {
             // set true for every investment in the list, then check set false each loop if criteria not met
             foundInvestment = true;
             
@@ -952,5 +939,62 @@ public class Portfolio{
         } catch (IOException e) {
             System.out.println("Error writing to file.");
         }
+    }
+
+    private void updateHash(ArrayList<Investment> inputList, HashMap<String, ArrayList<Integer>> index, ArrayList<Integer> keywordIndices){
+        index.clear();
+        
+        for (int i = 0; i < inputList.size(); i++) {
+            // store the name of the investment in a string
+            String investmentName = inputList.get(i).getName().toLowerCase();
+
+            // tokenize keywords into an array
+            String[] keywords = investmentName.split(" ");
+
+             // Check each keyword
+            for (String keyword : keywords) {
+                // If the keyword is contained in the current investment name
+                if (investmentName.contains(keyword)) {
+                    // Check if the keyword is already in the map
+                    keywordIndices = index.get(keyword);
+                    if (keywordIndices == null) {
+                        // If not present, create a new ArrayList and add it to the map
+                        keywordIndices = new ArrayList<>();
+                        index.put(keyword, keywordIndices);
+                    }
+                    // Add the current index if not already in the list
+                    if (!keywordIndices.contains(i)) {
+                        keywordIndices.add(i);
+                    }
+                    
+                }
+            }
+
+            // // ITERSECT ALL SIMILAR INDICIES FOR EACH KEYWORD
+            // // new array list to store the intersected indicides
+            // intersectedIndices = new ArrayList<>();
+            // if(!keywordIndices.isEmpty()){
+            //     // put the first keyowrd in the intersectedIndicies array list
+            //     if (index.containsKey(keywords[0])) {
+            //         intersectedIndices.addAll(index.get(keywords[0]));
+            //     }
+            
+            //     // Intersect with indices of remaining keywords
+            //     for (String keyword : keywords) {
+            //         keywordIndices = index.get(keyword);
+            //         if (keywordIndices != null) {
+            //             // retain all indices after the first
+            //             intersectedIndices.retainAll(keywordIndices);
+            //         }
+            //     }
+            // } 
+            // // if no keywords are provided, include all indices in the intersectedIndices array list
+            // else {
+            // intersectedIndices.add(i);
+            // }
+        }
+
+        System.out.println(index);
+        
     }
 }

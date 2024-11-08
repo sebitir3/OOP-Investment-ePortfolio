@@ -6,12 +6,11 @@ This program allows users to buy investments, sell investments, see their
 gain from all their investments currently, update the prices of their investments
 as well as search for certain investments that they have in the list of all investments.
 
-
 2) ASSUMPTIONS AND LIMITATIONS:
 We are assuming the user is inputing actual stocks and/or mutual funds into the e-portfolio
-as they are not being validated with actual stock and mutual funds in the real world. 
+as they are not being validated with actual stock and mutual funds in the real world.
 
-The program is limited by the fact that the user has to manually update the prices of the 
+The program is limited by the fact that the user has to manually update the prices of the
 investments where normally the prices themselves would automatically update periodically.
 
 For the menu loop, accepted options for all investment functions is either the first word
@@ -24,10 +23,12 @@ word (stock, mutual fund) or the first letter of each (s, m) all case insensitiv
 
 3) USER GUIDE:
 Compilition and execution:
-Run the following in a terminal from the main project folder (i.e. stiriba_a1) 
+Run the following in a terminal from the main project folder (i.e. stiriba_a1)
 $ javac ePortfolio/*.java
-$ jar cvfe A2.jar ePortfolio.Portfolio ePortfolio/*.class
+$ jar cvfe A2.jar ePortfolio.Portfolio <filename> ePortfolio/*.class
 $ java -jar A2.jar
+
+Here, filename is optional. If not specified it will write to "default.txt".
 
 A menu of options will then be presented to the user.
 First, (1) Buy option should be selected first to buy your investment
@@ -78,9 +79,7 @@ A lower bound range should be inputed as "0-". This searches for investments abo
 An upper bound range should be inputed as "-100". This searches for investments below $100 inclusive.
 An exact price should be inputed as "100". This searches for investments priced at exactly $100.
 
-
 4) TEST PLAN:
-
 MENU LOOP TESTING
 Test: if all inputs (buy or b case insensitive, sell or s case insensitive etc.) enter each function ✔
       enter values outside of the cases; test if loop asks for another option to be entered ✔
@@ -94,7 +93,7 @@ Test: if input for buying stock is accepted as 'stock' or 's' case insensitive a
 
 Sell
 Test: if input for selling stock is accepted as 'stock' or 's' case insensitive and input for selling mutual fund is accepted as 'mutual fund' or 'm' ✔
-      if symbol is found or not --> exit function if not found, continue with sell inputs if symbol found 
+      if symbol is found or not --> exit function if not found, continue with sell inputs if symbol found
       validate numerical inputs for quanitity and price using helper validate methods making sure price and quantity are larger than 0 ✔
       if list of chosen investment is empty, don't sell ✔
 
@@ -116,21 +115,24 @@ Test: all combinations of symbol, keywords, and ranges --> i.e. if some left bla
             --> return an error and exit the search loop ✔
       if no investment found --> message should be printed that none were found ✔
 
+Hashmap
+Test: that upon buy and sell function calls that the indices of all the keywords in investment names update accordingly (adding and removing) ✔
+      that it is parsed correctly in the search function so all the indices that match the input search keywords are properly intersected ✔
+
 Exit
 Test: if program is terminated ✔
 
-Read & Write to file 
+Read & Write to file
 Test: if program accepts command line argument file name --> if so make sure to loop through array list of investments and see if all information was read in ✔
       if program doesn't accept a command line argument file name --> make sure to create a default text file and check array list for no investments read in since no file specified ✔
-      
+     
       if program successfully writes to the given read option above (no file specified or file name specified) ✔
       also test entering a nonexistant filename as a command line argument --> should catch as an exception ✔
             and set file to write to as default.txt ✔
 
 5) IMPROVEMENTS TO DO:
 
-For later versions, simplify add UI to help user experience with the program; terminal has its visual limitations;
-      use java GUI
+For later versions, simplify add UI to help user experience with the program; terminal has its visual limitations; use java GUI
 
-Bigger picture: investment price information could be pulled from a database of prices to allow for automatic and 
+Bigger picture: investment price information could be pulled from a database of prices to allow for automatic and
 periodic price changes so the user can save time when calculating the gain on their investments.
