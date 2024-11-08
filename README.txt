@@ -90,12 +90,12 @@ INVESTMENT FUNCTION TESTING:
 Buy
 Test: if input for buying stock is accepted as 'stock' or 's' case insensitive and input for buying mutual fund is accepted as 'mutual fund' or 'm' ✔
       if symbol is found or not --> if not enter name for new investment, then quantity and price; else enter the quantity and price of the found investment ✔
-      validate numerical inputs for quanitity and price using helper validate methods ✔
+      validate numerical inputs for quanitity and price using helper validate methods making sure price and quantity are larger than 0 ✔
 
 Sell
 Test: if input for selling stock is accepted as 'stock' or 's' case insensitive and input for selling mutual fund is accepted as 'mutual fund' or 'm' ✔
       if symbol is found or not --> exit function if not found, continue with sell inputs if symbol found 
-      validate numerical inputs for quanitity and price using helper validate methods ✔
+      validate numerical inputs for quanitity and price using helper validate methods making sure price and quantity are larger than 0 ✔
       if list of chosen investment is empty, don't sell ✔
 
 Update
@@ -112,25 +112,25 @@ Test: all combinations of symbol, keywords, and ranges --> i.e. if some left bla
       if all keyword are found within the name of an investment (must contain all keywords entered) ✔
       if all types of ranges and edge cases work ✔
             i.e.(exact value, range above, range below, full range, and ranges that don't make sense such as 500-100) ✔
+            also test for an invalid range input that doesn't have spaces between two numbers with no hiphen '-'
+            --> return an error and exit the search loop ✔
       if no investment found --> message should be printed that none were found ✔
 
 Exit
 Test: if program is terminated ✔
 
+Read & Write to file 
+Test: if program accepts command line argument file name --> if so make sure to loop through array list of investments and see if all information was read in ✔
+      if program doesn't accept a command line argument file name --> make sure to create a default text file and check array list for no investments read in since no file specified ✔
+      
+      if program successfully writes to the given read option above (no file specified or file name specified) ✔
+      also test entering a nonexistant filename as a command line argument --> should catch as an exception ✔
+            and set file to write to as default.txt ✔
+
 5) IMPROVEMENTS TO DO:
 
-First of all, a parent class for both Stock.java and MutualFund.java should be created to
-allow for less duplication of code, as well as only managing 1 array list of investments,
-and not 1 array list of each type of investment (MutualFund.java and Stock.java are almost
-identical classes that can easily extend an investment.java class in the future).
+For later versions, simplify add UI to help user experience with the program; terminal has its visual limitations;
+      use java GUI
 
-For selling, if no symbol is found, the function in the future should ask for another
-investment symbol within the function rather than exiting the function (lessens the user
-inputs having to call the function again).
-
-For later versions, simplify the validate helper functions --> at least have 1 price validation and
-not 2 seperate functions for validating price when buying/selling and another for updating price.
-
-Bigger picture: investment price information could be pulled from a database of prices
-to allow for automatic and periodic price changes so the user can save time when
-calculating the gain on their investments.
+Bigger picture: investment price information could be pulled from a database of prices to allow for automatic and 
+periodic price changes so the user can save time when calculating the gain on their investments.

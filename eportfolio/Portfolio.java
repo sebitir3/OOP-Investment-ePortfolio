@@ -39,6 +39,10 @@ public class Portfolio{
         // construct the absolute path for the file
         String filePath;
 
+        // for incorrectly specified .txt filename
+        // write to default
+        boolean isDefaultCase;
+
         if (args.length < 1) {
             filePath = currentDir + "/ePortfolio/default.txt";
             File file = new File(filePath);
@@ -58,8 +62,12 @@ public class Portfolio{
         }
 
         // load in investments from file
+        // loadInvestments returns false when error reading file occurs
 
-        portfolio.loadInvestments(filePath);
+        isDefaultCase = portfolio.loadInvestments(filePath);
+        if(!isDefaultCase){
+            filePath = currentDir + "/ePortfolio/default.txt";
+        }
 
 
         do {
@@ -106,6 +114,9 @@ public class Portfolio{
 
                 case "q":
                 case "quit":
+                    if (isDefaultCase){
+
+                    }
                     portfolio.writeInvestments(filePath);
                     System.out.println("Exiting program...");
                     System.exit(0);
@@ -872,8 +883,10 @@ public class Portfolio{
      * This methods loads all investments into the investment array list from a file
      * 
      * @param filename - the file name to load from
+     * 
+     * @return true if no errors opening file, false if errors --> set file to default.txt
      */
-    private void loadInvestments(String filename){
+    private boolean loadInvestments(String filename){
         // file scanner
         Scanner inputStream = null;
         try {
@@ -910,8 +923,10 @@ public class Portfolio{
                 }
             }
             System.out.println("Investments loaded from file.");
+            return true;
         } catch (Exception e) {
             System.out.println("Error reading file.");
+            return false;
         }
     }
 
