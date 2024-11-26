@@ -1,7 +1,0 @@
-type = "stock"
-symbol = "TS"
-name = "test"
-quantity = "5"
-price = "5.0"
-bookValue = "34.99"
-
