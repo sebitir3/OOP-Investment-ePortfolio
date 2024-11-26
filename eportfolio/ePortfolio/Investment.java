@@ -1,6 +1,7 @@
 package ePortfolio;
 
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 
 /**
  * This class is used for the to initialize investment object
@@ -8,7 +9,7 @@ import java.text.DecimalFormat;
  * 
  * @author Sebastian Tiriba
  */
-public class Investment {
+public abstract class Investment {
     /**
      * variable for an invesments symbol
      */
@@ -38,7 +39,6 @@ public class Investment {
      */
     public Investment() {};
 
-
     /**
      * This constructor accepts data for the symbol, name
      * quantity, price and book value of a an investment and sets these
@@ -57,6 +57,10 @@ public class Investment {
         this.price = price;
         this.bookValue = bookValue;
     }
+
+    public abstract double buy(int addedQuantity, double newPrice);
+
+    public abstract double sell(int sellQuantity, double salePrice, ArrayList<Investment> inputList, int i);
 
     /**
      * This method will return the current value of the investment symbol
