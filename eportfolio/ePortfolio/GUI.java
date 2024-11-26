@@ -13,7 +13,7 @@ public class GUI extends JFrame implements ActionListener{
 
     public GUI () {
         setTitle("Investment Portfolio");
-        setSize(600, 400);
+        setSize(600, 500);
         setResizable(false);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
@@ -24,7 +24,7 @@ public class GUI extends JFrame implements ActionListener{
 
         // Add panels
         containerPanel.add(new InitialPanel(), "Initial");
-        // containerPanel.add(new BuyPanel(), "Buy");
+        containerPanel.add(new BuyPanel(), "Buy");
         // containerPanel.add(new SellPanel(), "Sell");
         // containerPanel.add(new UpdatePanel(), "Update");
         // containerPanel.add(new GainPanel(), "Gain");
@@ -94,11 +94,6 @@ public class GUI extends JFrame implements ActionListener{
                 // Exit the program
                 System.exit(0);
                 break;
-            default:
-                // Default to Initial panel if the action is unknown
-                cardLayout.show(containerPanel, "Initial");
-                break;
         }
     }
-    
 }

@@ -4,14 +4,18 @@ import javax.swing.*;
 import java.awt.*;
 
 public class InitialPanel extends JPanel{
+    
+    private JTextField welcome;
+    private JTextArea welcomeInfo;
+
     public InitialPanel() {
-        setSize(600, 400);
+        //setSize(600, 600);
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         setBackground(Color.WHITE);
         setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));   
         
-        JTextField welcome = new JTextField();
-        JTextArea welcomeInfo = new JTextArea(3,20);
+        welcome = new JTextField();
+        welcomeInfo = new JTextArea(3,20);
 
         welcome.setText("Welcome to ePortfolio.");
         welcome.setEditable(false);
