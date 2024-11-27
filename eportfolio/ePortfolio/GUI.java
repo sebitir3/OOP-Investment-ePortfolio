@@ -11,6 +11,8 @@ public class GUI extends JFrame implements ActionListener{
     private CardLayout cardLayout;
     private JPanel containerPanel;
 
+    private Portfolio portfolio;
+
     public GUI () {
         setTitle("Investment Portfolio");
         setSize(600, 500);
@@ -22,10 +24,12 @@ public class GUI extends JFrame implements ActionListener{
         cardLayout = new CardLayout();
         containerPanel = new JPanel(cardLayout);
 
+        Portfolio portfolio = new Portfolio();
+
         // Add panels
         containerPanel.add(new InitialPanel(), "Initial");
-        containerPanel.add(new BuyPanel(), "Buy");
-        // containerPanel.add(new SellPanel(), "Sell");
+        containerPanel.add(new BuyPanel(portfolio), "Buy");
+        containerPanel.add(new SellPanel(), "Sell");
         // containerPanel.add(new UpdatePanel(), "Update");
         // containerPanel.add(new GainPanel(), "Gain");
         // containerPanel.add(new SearchPanel(), "Search");

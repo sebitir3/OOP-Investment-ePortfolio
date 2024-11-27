@@ -5,14 +5,8 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 
 import java.awt.*;
-import java.awt.color.ProfileDataException;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
-public class BuyPanel extends JPanel implements ActionListener, MessageListener{
-    private Portfolio portfolio;
-
-
+public class SellPanel extends JPanel{
     private JPanel upperPanel;
 
     private JPanel leftOfUpperPanel;
@@ -20,25 +14,22 @@ public class BuyPanel extends JPanel implements ActionListener, MessageListener{
 
     private JPanel fieldListPanel;
 
-    private JComboBox<String> typeField;
+
     private JTextField symbolField;
-    private JTextField nameField;
+
     private JTextField quantityField;
     private JTextField priceField;
     
     private JPanel rightOfUpperPanel;
 
     private JButton resetButton;
-    private JButton buyButton;
+    private JButton sellButton;
 
     private JPanel lowerPanel;
 
     private JTextArea messagesArea;
 
-    public BuyPanel(Portfolio portfolio) {
-        this.portfolio = portfolio;
-        portfolio.setMessageListener(this);
-
+    public SellPanel() {
         //setSize(600, 600);
         setLayout(new GridLayout(2,1));
         
@@ -55,7 +46,7 @@ public class BuyPanel extends JPanel implements ActionListener, MessageListener{
         leftOfUpperPanel = new JPanel(new BorderLayout());
         leftOfUpperPanel.setBackground(Color.WHITE);
 
-        panelTitle = new JLabel(" Buying an Investment");
+        panelTitle = new JLabel(" Selling an Investment");
         panelTitle.setFont(new Font("Helvetica", Font.PLAIN, 13));
         
         fieldListPanel = new JPanel();
@@ -63,28 +54,14 @@ public class BuyPanel extends JPanel implements ActionListener, MessageListener{
         fieldListPanel.setLayout(new GridBagLayout()); // Use GridBagLayout for form fields
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.fill = GridBagConstraints.HORIZONTAL;
-        gbc.insets = new Insets(5, 5, 5, 5); // Add space between components
+        gbc.insets = new Insets(15, 5, 15, 5); // Add space between components
 
         // Create labels and text fields for input
-        JLabel typeFieldLabel = new JLabel("Type");
-        typeFieldLabel.setFont(new Font("Helvetica", Font.PLAIN, 13));
-        String[] options = {"Stock", "Mutual Fund"};
-        typeField = new JComboBox<>(options);
-        typeField.setBackground(Color.WHITE);
-        typeField.setPreferredSize(new Dimension(200, 25));
-        typeField.setFont(new Font("Helvetica", Font.PLAIN, 13));
-
         JLabel symbolFieldLabel = new JLabel("Symbol");
         symbolFieldLabel.setFont(new Font("Helvetica", Font.PLAIN, 13));
         symbolField = new JTextField();
         symbolField.setPreferredSize(new Dimension(200, 25));
         symbolField.setFont(new Font("Helvetica", Font.PLAIN, 13));
-
-        JLabel nameFieldLabel = new JLabel("Name");
-        nameFieldLabel.setFont(new Font("Helvetica", Font.PLAIN, 13));
-        nameField = new JTextField();
-        nameField.setPreferredSize(new Dimension(200, 25));
-        nameField.setFont(new Font("Helvetica", Font.PLAIN, 13));
 
         JLabel quantityFieldLabel = new JLabel("Quantity");
         quantityFieldLabel.setFont(new Font("Helvetica", Font.PLAIN, 13));
@@ -101,31 +78,18 @@ public class BuyPanel extends JPanel implements ActionListener, MessageListener{
         // Add labels and fields to fieldListPanel with GridBagLayout
         gbc.gridx = 0;
         gbc.gridy = 0;
-        gbc.anchor = GridBagConstraints.WEST;
-        fieldListPanel.add(typeFieldLabel, gbc);
-        gbc.gridx = 1;
-        fieldListPanel.add(typeField, gbc);
-
-        gbc.gridx = 0;
-        gbc.gridy = 1;
         fieldListPanel.add(symbolFieldLabel, gbc);
         gbc.gridx = 1;
         fieldListPanel.add(symbolField, gbc);
 
         gbc.gridx = 0;
-        gbc.gridy = 2;
-        fieldListPanel.add(nameFieldLabel, gbc);
-        gbc.gridx = 1;
-        fieldListPanel.add(nameField, gbc);
-
-        gbc.gridx = 0;
-        gbc.gridy = 3;
+        gbc.gridy = 1;
         fieldListPanel.add(quantityFieldLabel, gbc);
         gbc.gridx = 1;
         fieldListPanel.add(quantityField, gbc);
 
         gbc.gridx = 0;
-        gbc.gridy = 4;
+        gbc.gridy = 2;
         fieldListPanel.add(priceFieldLabel, gbc);
         gbc.gridx = 1;
         fieldListPanel.add(priceField, gbc);
@@ -143,30 +107,26 @@ public class BuyPanel extends JPanel implements ActionListener, MessageListener{
         // Create panels to wrap the buttons
         JPanel resetButtonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 50));
         resetButtonPanel.setBackground(Color.WHITE);
-        JPanel buyButtonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 20));
-        buyButtonPanel.setBackground(Color.WHITE);
+        JPanel sellButtonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 20));
+        sellButtonPanel.setBackground(Color.WHITE);
 
         resetButton = new JButton("Reset");
         resetButton.setFont(new Font("Helvetica", Font.PLAIN, 13));
         resetButton.setBackground(Color.WHITE);
-        resetButton.addActionListener(this);
+        sellButton = new JButton("Sell");
+        sellButton.setFont(new Font("Helvetica", Font.PLAIN, 13));
+        sellButton.setBackground(Color.WHITE);
 
-        buyButton = new JButton("Buy");
-        buyButton.setFont(new Font("Helvetica", Font.PLAIN, 13));
-        buyButton.setBackground(Color.WHITE);
-        buyButton.addActionListener(this);
-
-        Dimension buttonSize = new Dimension(100, 35);
+        Dimension buttonSize = new Dimension(100, 35); // Width: 80, Height: 30
         resetButton.setPreferredSize(buttonSize);
-        buyButton.setPreferredSize(buttonSize);
-        
+        sellButton.setPreferredSize(buttonSize);
 
         resetButtonPanel.add(resetButton);
-        buyButtonPanel.add(buyButton);
+        sellButtonPanel.add(sellButton);
 
         // Add the panels to the rightOfUpperPanel
         rightOfUpperPanel.add(resetButtonPanel);
-        rightOfUpperPanel.add(buyButtonPanel);
+        rightOfUpperPanel.add(sellButtonPanel);
 
         upperPanel.add(rightOfUpperPanel);
         
@@ -186,6 +146,7 @@ public class BuyPanel extends JPanel implements ActionListener, MessageListener{
         messagesArea.setFont(new Font("Helvetica", Font.PLAIN, 13));
         messagesArea.setEditable(false);
 
+
         // scroll pane
         JScrollPane scrollBars = new JScrollPane(messagesArea);
         scrollBars.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
@@ -197,36 +158,5 @@ public class BuyPanel extends JPanel implements ActionListener, MessageListener{
         add(upperPanel); 
         add(lowerPanel);
     }
-
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        String buttonCommand = e.getActionCommand();
-        if(buttonCommand.equals("Reset")){
-            symbolField.setText("");
-            nameField.setText("");;
-            quantityField.setText("");;
-            priceField.setText("");;
-        } else if (buttonCommand.equals("Buy")){
-            //try {
-                String type = (String) typeField.getSelectedItem();
-                String symbol = symbolField.getText().trim();
-                String name = nameField.getText().trim();
-                int quantity = Integer.parseInt(quantityField.getText().trim());
-                double price = Double.parseDouble(priceField.getText().trim());
-        
-                // Call the Portfolio's buyInvestments method
-                portfolio.buyInvestments(type, symbol, name, quantity, price);
-        
-                // Provide feedback to the user
-                messagesArea.append("Successfully bought investment: " + name + "\n");
-            //} catch (NumberFormatException ex) {
-                //messagesArea.append("Invalid input. Please check your fields.\n");
-            //}
-        }
-    }
-
-    @Override
-    public void appendMessage(String message) {
-        messagesArea.setText(message + "\n");
-    }
 }
+

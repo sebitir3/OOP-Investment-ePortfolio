@@ -23,6 +23,8 @@ public class Portfolio{
     // decimal format for getGain
     private static final DecimalFormat df = new DecimalFormat("0.00");
 
+    private MessageListener messageListener;
+
     /**
      * Main methods for implementing all operations
      * 
@@ -96,7 +98,7 @@ public class Portfolio{
             switch (input) {
                 case "b":
                 case "buy":
-                    portfolio.buyInvestments(scanner);
+                    //portfolio.buyInvestments(scanner);
                     break;
 
                 case "s":
@@ -134,6 +136,18 @@ public class Portfolio{
 
     // METHODS FOR MAIN
 
+    // implement messageListener
+    public void setMessageListener(MessageListener listener) {
+        this.messageListener = listener;
+    }
+
+    // if there is something in the message listener, send it over
+    private void notifyMessage(String message) {
+        if (messageListener != null) {
+            messageListener.appendMessage(message);
+        }
+    }
+
     // BUY A STOCK OR MUTUAL FUND
 
     /**
@@ -141,9 +155,7 @@ public class Portfolio{
      * 
      * @param scanner - for user inputs
      */
-    private void buyInvestments(Scanner scanner){
-        int quantityToBuy = 0;
-        double priceToBuy = 0;
+    public void buyInvestments(String buyInvestType, String symbolToBuy, String nameToBuy, int quantityToBuy, double priceToBuy){
         // if buying a stock or mutual fund
         boolean stockMode = false;
         
@@ -155,23 +167,6 @@ public class Portfolio{
         // book value when purchased
         double purchaseBookValue = 0;
 
-        System.out.println("Enter the type of investment you want to buy: ");
-        String buyInvestType = scanner.nextLine().toLowerCase();
-    
-        // validate input until user correctly enters stock or mutual fund
-        while (!buyInvestType.equals("stock") && !buyInvestType.equals("mutual fund") && !buyInvestType.equals("s") && !buyInvestType.equals("m")){
-            System.out.println("Enter a valid investment type (stock or mutual fund): ");
-            buyInvestType = scanner.nextLine();
-        }
-
-        // enter the symbol of investment user wishes to purchase
-        if(buyInvestType.equalsIgnoreCase("stock") || buyInvestType.equalsIgnoreCase("s")){
-            System.out.println("Enter the symbol of the stock you wish to purchase: ");
-        } else if (buyInvestType.equalsIgnoreCase("mutual fund") || buyInvestType.equalsIgnoreCase("m")){
-            System.out.println("Enter the symbol of the mutual fund you wish to purchase: ");
-        }
-        String symbolToBuy = scanner.nextLine();
-
         // iterate through all investments
         for (int i = 0; i < listOfInvestments.size(); i++) {
             if(!investmentFound && !duplicateSymbol){
@@ -182,7 +177,7 @@ public class Portfolio{
 
                     // check if the symbol is a mutual fund and print error if true
                     if (symbolToBuy.equals(listOfInvestments.get(i).getSymbol()) && listOfInvestments.get(i) instanceof MutualFund){
-                        System.out.println("Error. This symbol already exists as a mutual fund.");
+                        notifyMessage("Error. This symbol already exists as a mutual fund.");
                         duplicateSymbol = true;
                     } 
                     // find stock in investment list and buy stock
@@ -190,19 +185,19 @@ public class Portfolio{
                         Stock stockInList = (Stock)listOfInvestments.get(i);
                         investmentFound = true;
                         // modify the stock found in the array list
-                        System.out.println(symbolToBuy + " was found!");
+                        //System.out.println(symbolToBuy + " was found!");
 
                         // ask for quantity and price with validation
-                        quantityToBuy = quanityValidation(scanner, quantityToBuy, true);
-                        priceToBuy = priceValidation(scanner, priceToBuy, stockMode);
+                        quantityToBuy = quanityValidation(quantityToBuy, true);
+                        priceToBuy = priceValidation(priceToBuy, stockMode);
                                 
                         // buy shares of a stock
                         purchaseBookValue = stockInList.buy(quantityToBuy, priceToBuy);
                         if (quantityToBuy != 1){
-                            System.out.println(quantityToBuy + " shares of " + listOfInvestments.get(i).getName() 
+                            notifyMessage(quantityToBuy + " shares of " + listOfInvestments.get(i).getName() 
                                 + " (" + symbolToBuy + ") were bought at $" + df.format(priceToBuy) + " | Book Value of Purchase: $" + df.format(purchaseBookValue));
                         } else {
-                            System.out.println(quantityToBuy + " share of " + listOfInvestments.get(i).getName() 
+                            notifyMessage(quantityToBuy + " share of " + listOfInvestments.get(i).getName() 
                                 + " (" + symbolToBuy + ") was bought at $" + df.format(priceToBuy) + " | Book Value of Purchase: $" + df.format(purchaseBookValue));
                         }
                         //break;
@@ -228,19 +223,18 @@ public class Portfolio{
                         MutualFund fundInList = (MutualFund)listOfInvestments.get(i);
             
                         // ask for quantity and price with validation
-                        quantityToBuy = quanityValidation(scanner, quantityToBuy, true);
-                        priceToBuy = priceValidation(scanner, priceToBuy, stockMode);
+                        quantityToBuy = quanityValidation(quantityToBuy, true);
+                        priceToBuy = priceValidation(priceToBuy, stockMode);
             
                         // buy shares of a stock
                         purchaseBookValue = fundInList.buy(quantityToBuy, priceToBuy);
                         if(quantityToBuy != 1){
-                            System.out.println(quantityToBuy + " units of " + fundInList.getName() 
+                            notifyMessage(quantityToBuy + " units of " + fundInList.getName() 
                                 + " (" + symbolToBuy + ") were bought at $" + df.format(priceToBuy) + " | Book Value of Purchase: $" + df.format(purchaseBookValue));
                         } else {
-                            System.out.println(quantityToBuy + " unit of " + fundInList.getName() 
+                            notifyMessage(quantityToBuy + " unit of " + fundInList.getName() 
                                 + " (" + symbolToBuy + ") was bought at $" + df.format(priceToBuy) + " | Book Value of Purchase: $" + df.format(purchaseBookValue));
                         }                                   
-                        //break;
                     }
                 }
             }
@@ -251,62 +245,51 @@ public class Portfolio{
             // NEW STOCK
             if(buyInvestType.equalsIgnoreCase("stock") || buyInvestType.equalsIgnoreCase("s")){
                 System.out.println(symbolToBuy + " was found not found.");
-    
-                System.out.println("Enter the name of the stock you would like to purchase: ");
-                String nameToBuy = scanner.nextLine();
         
                 // ask for quantity and price with validation
-                quantityToBuy = quanityValidation(scanner, quantityToBuy, true);
-                priceToBuy = priceValidation(scanner, priceToBuy, stockMode);
+                quantityToBuy = quanityValidation(quantityToBuy, true);
+                priceToBuy = priceValidation(priceToBuy, stockMode);
         
                 Stock inputStock = new Stock(symbolToBuy, nameToBuy, 0, 0, 0);
         
                 // buy shares of the stock (sets quantity, price, and bookvalue)
                 purchaseBookValue = inputStock.buy(quantityToBuy, priceToBuy);
                 if(quantityToBuy != 1){
-                    System.out.println(quantityToBuy + " shares of " + nameToBuy + " (" + symbolToBuy 
+                    notifyMessage(quantityToBuy + " shares of " + nameToBuy + " (" + symbolToBuy 
                         + ") were bought at $" + df.format(priceToBuy) + " | Book Value of Purchase: $" + df.format(purchaseBookValue));
                 } else {
-                    System.out.println(quantityToBuy + " share of " + nameToBuy + " (" + symbolToBuy 
+                    notifyMessage(quantityToBuy + " share of " + nameToBuy + " (" + symbolToBuy 
                         + ") was bought at $" + df.format(priceToBuy) + " | Book Value of Purchase: $" + df.format(purchaseBookValue));
                 }
-                    // add stock to array list
-                    listOfInvestments.add(inputStock);
+                // add stock to array list
+                listOfInvestments.add(inputStock);
             } 
             // NEW MUTUAL FUND
             else if (buyInvestType.equalsIgnoreCase("mutual fund") || buyInvestType.equalsIgnoreCase("m")){
                 System.out.println(symbolToBuy + " was found not found.");
-                
-                System.out.println("Enter the name of the mutual fund you would like to purchase: ");
-                String nameToBuy = scanner.nextLine();
             
                 // ask for quantity and price with validation
-                quantityToBuy = quanityValidation(scanner, quantityToBuy, true);
-                priceToBuy = priceValidation(scanner, priceToBuy, stockMode);
+                quantityToBuy = quanityValidation(quantityToBuy, true);
+                priceToBuy = priceValidation(priceToBuy, stockMode);
             
                 MutualFund inputMutualFund = new MutualFund(symbolToBuy, nameToBuy, 0, 0, 0);
             
                 // buy shares of the stock (sets quantity, price, and bookvalue)
                 purchaseBookValue = inputMutualFund.buy(quantityToBuy, priceToBuy);
                 if (quantityToBuy != 1){
-                    System.out.println(quantityToBuy + " units of " + nameToBuy + " (" 
+                    notifyMessage(quantityToBuy + " units of " + nameToBuy + " (" 
                         + symbolToBuy + ") were bought at $" + df.format(priceToBuy) + " | Book Value of Purchase: $" + df.format(purchaseBookValue));
                 } else {
-                    System.out.println(quantityToBuy + " unit of " + nameToBuy + " (" 
+                    notifyMessage(quantityToBuy + " unit of " + nameToBuy + " (" 
                         + symbolToBuy + ") was bought at $" + df.format(priceToBuy) + " | Book Value of Purchase: $" + df.format(purchaseBookValue));
                 }
                 // add mutual fund to array list
-                System.out.println(inputMutualFund);
+                notifyMessage(inputMutualFund.toString());
                 listOfInvestments.add(inputMutualFund);
             }
         }
         // update hashmap after buying
         updateHash(listOfInvestments, index, keywordIndices);
-          
-        // clear new line unless duplicate sequence
-        if(!duplicateSymbol){
-            scanner.nextLine();  // clear new line character for next function call in switch case
-        }
     }
        
     // SELL AN INVESTMENT
@@ -415,16 +398,16 @@ public class Portfolio{
                                 System.out.println(symbolToSell + " was found!");
 
                                 // ask for quantity and price with validation
-                                quantityToSell = quanityValidation(scanner, quantityToSell, false);
+                                //quantityToSell = quanityValidation(scanner, quantityToSell, false);
                             
                                 // check if quantity to sell is larger than owned stock
                                 while(quantityToSell > stockSold.getQuantity()){
                                     System.out.println("ERROR: Not enough shares owned to sell.");
-                                    quantityToSell = quanityValidation(scanner, quantityToSell, false);       
+                                    //quantityToSell = quanityValidation(scanner, quantityToSell, false);       
                                 }
 
                                 // validate input price to sell
-                                priceToSell = priceValidation(scanner, priceToSell, stockMode);
+                                //priceToSell = priceValidation(scanner, priceToSell, stockMode);
 
                                 // for full purchase, index is removed so we must store the name of the stock in a temp var
                                 String tempName = stockSold.getName();
@@ -465,15 +448,15 @@ public class Portfolio{
                                 System.out.println(symbolToSell + " was found!");
 
                                 // ask for quantity and price with validation
-                                quantityToSell = quanityValidation(scanner, quantityToSell, false);
+                                //quantityToSell = quanityValidation(scanner, quantityToSell, false);
 
                                 while(quantityToSell > fundSold.getQuantity()){
                                     System.out.println("ERROR: Not enough units owned to sell.");
-                                    quantityToSell = quanityValidation(scanner, quantityToSell, false);
+                                    // = quanityValidation(scanner, quantityToSell, false);
                                 }
 
                                 // validate input price to sell
-                                priceToSell = priceValidation(scanner, priceToSell, stockMode);
+                                //priceToSell = priceValidation(scanner, priceToSell, stockMode);
 
                                 // for full purchase, index is removed so we must store the name of the stock in a temp var
                                 String tempName = fundSold.getName();
@@ -760,21 +743,12 @@ public class Portfolio{
      * @param validQuantity - the quantity value to validate
      * @param ifBuy - if buying or selling
      */
-    private int quanityValidation(Scanner scanner, int validQuantity, boolean ifBuy){
+    private int quanityValidation(int validQuantity, boolean ifBuy){
         boolean validInput = false;
 
         // loop until input is valid
         while (!validInput){
             try {
-                // print dependant on buy or sell
-                if(ifBuy){
-                    System.out.println("Enter the quantity you would like to purchase: ");
-                } else {
-                    System.out.println("Enter the quantity you would like to sell: ");
-                }
-                // get quantity from user
-                validQuantity = scanner.nextInt();
-
                 // only exit loop if value is positive integer
                 if (validQuantity <= 0){
                     System.out.println("Enter a positive quantity.");
@@ -784,7 +758,6 @@ public class Portfolio{
             // throw input mismatch exception and ask again until valid
             } catch (InputMismatchException e){
                 System.out.println("Invalid input. Please enter a whole number.");
-                scanner.next();
             }   
         }
         return validQuantity;
@@ -800,31 +773,21 @@ public class Portfolio{
      * @param validPrice - the price value to validate
      * @param ifStock - if stock or mutual fund
      */
-    private double priceValidation(Scanner scanner, double validPrice, boolean ifStock){
+    private double priceValidation(double validPrice, boolean ifStock){
         boolean validInput = false;
 
         // loop until valid input   
         while (!validInput){
             try {
-                // print dependant on stock or mutual fund (i.e. shares or units)
-                if(ifStock){
-                    System.out.println("Enter the price of each share: ");
-                } else {
-                    System.out.println("Enter the price of each unit: ");
-                }
-                // get price from user
-                validPrice = scanner.nextDouble();
-
                 // only exit the loop if price is a positive number
                 if (validPrice <= 0){
-                    System.out.println("Enter a positive price.");
+                    notifyMessage("Enter a positive price.");
                 } else {
                     validInput = true;
                 }
             // throw input mismatch exception and ask again until valid
             } catch (InputMismatchException e){
-                System.out.println("Invalid input. Please enter a number.");
-                scanner.next();
+                notifyMessage("Invalid input. Please enter a number.");
             }
         }
         return validPrice;
