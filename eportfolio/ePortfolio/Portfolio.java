@@ -171,7 +171,7 @@ public class Portfolio{
         for (int i = 0; i < listOfInvestments.size(); i++) {
             if(!investmentFound && !duplicateSymbol){
                 // IF STOCK
-                if ((buyInvestType.equalsIgnoreCase("stock") || buyInvestType.equalsIgnoreCase("s"))) {
+                if ((buyInvestType.equalsIgnoreCase("stock"))) {
                     stockMode = true;
                     investmentFound = false;
 
@@ -202,8 +202,8 @@ public class Portfolio{
                         }
                         //break;
                     }    
-                // buying a mutual fund           
-                } else if (buyInvestType.equalsIgnoreCase("mutual fund") || buyInvestType.equalsIgnoreCase("m")) {
+                // IF MUTUAL FUND          
+                } else if (buyInvestType.equalsIgnoreCase("mutual fund")) {
                     stockMode = false;
                     investmentFound = false;
             
@@ -243,7 +243,7 @@ public class Portfolio{
         // buy NEW investment
         if(!investmentFound && !duplicateSymbol) {
             // NEW STOCK
-            if(buyInvestType.equalsIgnoreCase("stock") || buyInvestType.equalsIgnoreCase("s")){
+            if(buyInvestType.equalsIgnoreCase("stock")){
                 System.out.println(symbolToBuy + " was found not found.");
         
                 // ask for quantity and price with validation
@@ -265,7 +265,7 @@ public class Portfolio{
                 listOfInvestments.add(inputStock);
             } 
             // NEW MUTUAL FUND
-            else if (buyInvestType.equalsIgnoreCase("mutual fund") || buyInvestType.equalsIgnoreCase("m")){
+            else if (buyInvestType.equalsIgnoreCase("mutual fund")){
                 System.out.println(symbolToBuy + " was found not found.");
             
                 // ask for quantity and price with validation
@@ -283,8 +283,6 @@ public class Portfolio{
                     notifyMessage(quantityToBuy + " unit of " + nameToBuy + " (" 
                         + symbolToBuy + ") was bought at $" + df.format(priceToBuy) + " | Book Value of Purchase: $" + df.format(purchaseBookValue));
                 }
-                // add mutual fund to array list
-                notifyMessage(inputMutualFund.toString());
                 listOfInvestments.add(inputMutualFund);
             }
         }

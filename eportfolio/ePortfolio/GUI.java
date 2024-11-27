@@ -30,9 +30,9 @@ public class GUI extends JFrame implements ActionListener{
         containerPanel.add(new InitialPanel(), "Initial");
         containerPanel.add(new BuyPanel(portfolio), "Buy");
         containerPanel.add(new SellPanel(), "Sell");
-        // containerPanel.add(new UpdatePanel(), "Update");
-        // containerPanel.add(new GainPanel(), "Gain");
-        // containerPanel.add(new SearchPanel(), "Search");
+        containerPanel.add(new UpdatePanel(), "Update");
+        containerPanel.add(new GainPanel(), "Gain");
+        containerPanel.add(new SearchPanel(), "Search");
 
         add(containerPanel, BorderLayout.CENTER);
 

@@ -8,7 +8,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class SellPanel extends JPanel implements ActionListener{
+public class SearchPanel extends JPanel implements ActionListener{
     private JPanel upperPanel;
 
     private JPanel leftOfUpperPanel;
@@ -16,22 +16,21 @@ public class SellPanel extends JPanel implements ActionListener{
 
     private JPanel fieldListPanel;
 
-
     private JTextField symbolField;
-
-    private JTextField quantityField;
-    private JTextField priceField;
+    private JTextField nameKeyField;
+    private JTextField lowField;
+    private JTextField highField;
     
     private JPanel rightOfUpperPanel;
 
     private JButton resetButton;
-    private JButton sellButton;
+    private JButton searchButton;
 
     private JPanel lowerPanel;
 
     private JTextArea messagesArea;
 
-    public SellPanel() {
+    public SearchPanel() {
         setLayout(new GridLayout(2,1));
         
         setBackground(Color.WHITE);
@@ -47,7 +46,7 @@ public class SellPanel extends JPanel implements ActionListener{
         leftOfUpperPanel = new JPanel(new BorderLayout());
         leftOfUpperPanel.setBackground(Color.WHITE);
 
-        panelTitle = new JLabel(" Selling an Investment");
+        panelTitle = new JLabel(" Searching Investments");
         panelTitle.setFont(new Font("Helvetica", Font.PLAIN, 13));
         
         fieldListPanel = new JPanel();
@@ -55,26 +54,35 @@ public class SellPanel extends JPanel implements ActionListener{
         fieldListPanel.setLayout(new GridBagLayout()); // Use GridBagLayout for form fields
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.fill = GridBagConstraints.HORIZONTAL;
-        gbc.insets = new Insets(15, 5, 15, 5); // Add space between components
+        gbc.insets = new Insets(5, 5, 5, 5); // Add space between components
+        gbc.weightx = 1.0;
 
-        // Create labels and text fields for input
+
         JLabel symbolFieldLabel = new JLabel("Symbol");
         symbolFieldLabel.setFont(new Font("Helvetica", Font.PLAIN, 13));
         symbolField = new JTextField();
         symbolField.setPreferredSize(new Dimension(200, 25));
         symbolField.setFont(new Font("Helvetica", Font.PLAIN, 13));
 
-        JLabel quantityFieldLabel = new JLabel("Quantity");
-        quantityFieldLabel.setFont(new Font("Helvetica", Font.PLAIN, 13));
-        quantityField = new JTextField();
-        quantityField.setPreferredSize(new Dimension(200, 25));
-        quantityField.setFont(new Font("Helvetica", Font.PLAIN, 13));
+        JLabel nameKeyFieldLabel = new JLabel("Name /");
+        nameKeyFieldLabel.setFont(new Font("Helvetica", Font.PLAIN, 13));
+        JLabel nameKey2FieldLabel = new JLabel("Keywords");
+        nameKey2FieldLabel.setFont(new Font("Helvetica", Font.PLAIN, 13));
+        nameKeyField = new JTextField();
+        nameKeyField.setPreferredSize(new Dimension(200, 25));
+        nameKeyField.setFont(new Font("Helvetica", Font.PLAIN, 13));
 
-        JLabel priceFieldLabel = new JLabel("Price");
-        priceFieldLabel.setFont(new Font("Helvetica", Font.PLAIN, 13));
-        priceField = new JTextField();
-        priceField.setPreferredSize(new Dimension(200, 25));
-        priceField.setFont(new Font("Helvetica", Font.PLAIN, 13));
+        JLabel lowFieldLabel = new JLabel("Low Price");
+        lowFieldLabel.setFont(new Font("Helvetica", Font.PLAIN, 13));
+        lowField = new JTextField();
+        lowField.setPreferredSize(new Dimension(200, 25));
+        lowField.setFont(new Font("Helvetica", Font.PLAIN, 13));
+
+        JLabel highFieldLabel = new JLabel("High Price");
+        highFieldLabel.setFont(new Font("Helvetica", Font.PLAIN, 13));
+        highField = new JTextField();
+        highField.setPreferredSize(new Dimension(200, 25));
+        highField.setFont(new Font("Helvetica", Font.PLAIN, 13));
 
         // Add labels and fields to fieldListPanel with GridBagLayout
         gbc.gridx = 0;
@@ -85,22 +93,34 @@ public class SellPanel extends JPanel implements ActionListener{
 
         gbc.gridx = 0;
         gbc.gridy = 1;
-        fieldListPanel.add(quantityFieldLabel, gbc);
-        gbc.gridx = 1;
-        fieldListPanel.add(quantityField, gbc);
-
+        fieldListPanel.add(nameKeyFieldLabel, gbc);
+        
+        gbc.insets = new Insets(0, 5, 5, 5); // Reduce the top inset to bring labels closer vertically
         gbc.gridx = 0;
         gbc.gridy = 2;
-        fieldListPanel.add(priceFieldLabel, gbc);
+        fieldListPanel.add(nameKey2FieldLabel, gbc);
         gbc.gridx = 1;
-        fieldListPanel.add(priceField, gbc);
+        fieldListPanel.add(nameKeyField, gbc);
+
+        gbc.insets = new Insets(5, 5, 5, 5); // Reset insets to default for other components
+        gbc.gridx = 0;
+        gbc.gridy = 3;
+        fieldListPanel.add(lowFieldLabel, gbc);
+        gbc.gridx = 1;
+        fieldListPanel.add(lowField, gbc);
+
+        gbc.gridx = 0;
+        gbc.gridy = 4;
+        fieldListPanel.add(highFieldLabel, gbc);
+        gbc.gridx = 1;
+        fieldListPanel.add(highField, gbc);
 
         leftOfUpperPanel.add(panelTitle, BorderLayout.NORTH);
         leftOfUpperPanel.add(fieldListPanel, BorderLayout.CENTER);
 
         upperPanel.add(leftOfUpperPanel);
 
-        // LEFT UPPER PANEL
+        // RIGHT UPPER PANEL
 
         rightOfUpperPanel = new JPanel(new GridLayout(2,1));
         rightOfUpperPanel.setBackground(Color.WHITE);
@@ -108,26 +128,26 @@ public class SellPanel extends JPanel implements ActionListener{
         // Create panels to wrap the buttons
         JPanel resetButtonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 50));
         resetButtonPanel.setBackground(Color.WHITE);
-        JPanel sellButtonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 20));
-        sellButtonPanel.setBackground(Color.WHITE);
+        JPanel searchButtonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 20));
+        searchButtonPanel.setBackground(Color.WHITE);
 
         resetButton = new JButton("Reset");
         resetButton.setFont(new Font("Helvetica", Font.PLAIN, 13));
         resetButton.setBackground(Color.WHITE);
-        sellButton = new JButton("Sell");
-        sellButton.setFont(new Font("Helvetica", Font.PLAIN, 13));
-        sellButton.setBackground(Color.WHITE);
+        searchButton = new JButton("Search");
+        searchButton.setFont(new Font("Helvetica", Font.PLAIN, 13));
+        searchButton.setBackground(Color.WHITE);
 
         Dimension buttonSize = new Dimension(100, 35); // Width: 80, Height: 30
         resetButton.setPreferredSize(buttonSize);
-        sellButton.setPreferredSize(buttonSize);
+        searchButton.setPreferredSize(buttonSize);
 
         resetButtonPanel.add(resetButton);
-        sellButtonPanel.add(sellButton);
+        searchButtonPanel.add(searchButton);
 
         // Add the panels to the rightOfUpperPanel
         rightOfUpperPanel.add(resetButtonPanel);
-        rightOfUpperPanel.add(sellButtonPanel);
+        rightOfUpperPanel.add(searchButtonPanel);
 
         upperPanel.add(rightOfUpperPanel);
         
@@ -136,7 +156,7 @@ public class SellPanel extends JPanel implements ActionListener{
         lowerPanel = new JPanel(new BorderLayout());
         lowerPanel.setBackground(Color.WHITE);
 
-        JLabel messagesLabel = new JLabel("Messages");
+        JLabel messagesLabel = new JLabel("Search Results");
         messagesLabel.setFont(new Font("Helvetica", Font.PLAIN, 13));
         messagesLabel.setBackground(Color.WHITE);
         

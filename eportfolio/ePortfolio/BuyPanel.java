@@ -5,7 +5,6 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 
 import java.awt.*;
-import java.awt.color.ProfileDataException;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -101,7 +100,6 @@ public class BuyPanel extends JPanel implements ActionListener, MessageListener{
         // Add labels and fields to fieldListPanel with GridBagLayout
         gbc.gridx = 0;
         gbc.gridy = 0;
-        gbc.anchor = GridBagConstraints.WEST;
         fieldListPanel.add(typeFieldLabel, gbc);
         gbc.gridx = 1;
         fieldListPanel.add(typeField, gbc);
@@ -135,7 +133,7 @@ public class BuyPanel extends JPanel implements ActionListener, MessageListener{
 
         upperPanel.add(leftOfUpperPanel);
 
-        // LEFT UPPER PANEL
+        // RIGHT UPPER PANEL
 
         rightOfUpperPanel = new JPanel(new GridLayout(2,1));
         rightOfUpperPanel.setBackground(Color.WHITE);
@@ -218,7 +216,6 @@ public class BuyPanel extends JPanel implements ActionListener, MessageListener{
                 portfolio.buyInvestments(type, symbol, name, quantity, price);
         
                 // Provide feedback to the user
-                messagesArea.append("Successfully bought investment: " + name + "\n");
             //} catch (NumberFormatException ex) {
                 //messagesArea.append("Invalid input. Please check your fields.\n");
             //}

@@ -8,7 +8,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class SellPanel extends JPanel implements ActionListener{
+public class UpdatePanel extends JPanel implements ActionListener{
     private JPanel upperPanel;
 
     private JPanel leftOfUpperPanel;
@@ -16,22 +16,20 @@ public class SellPanel extends JPanel implements ActionListener{
 
     private JPanel fieldListPanel;
 
-
     private JTextField symbolField;
-
-    private JTextField quantityField;
+    private JTextField nameField;
     private JTextField priceField;
     
     private JPanel rightOfUpperPanel;
 
-    private JButton resetButton;
-    private JButton sellButton;
+    private JButton prevButton;
+    private JButton nextButton;
+    private JButton saveButton;
 
     private JPanel lowerPanel;
-
     private JTextArea messagesArea;
 
-    public SellPanel() {
+    public UpdatePanel() {
         setLayout(new GridLayout(2,1));
         
         setBackground(Color.WHITE);
@@ -42,12 +40,12 @@ public class SellPanel extends JPanel implements ActionListener{
         upperPanel = new JPanel(new GridLayout(1,2));
         upperPanel.setBackground(Color.WHITE);
 
-        // LEFT OF UPPER
+        // LEFT UPPER PANEL
 
         leftOfUpperPanel = new JPanel(new BorderLayout());
         leftOfUpperPanel.setBackground(Color.WHITE);
 
-        panelTitle = new JLabel(" Selling an Investment");
+        panelTitle = new JLabel(" Updating Investments");
         panelTitle.setFont(new Font("Helvetica", Font.PLAIN, 13));
         
         fieldListPanel = new JPanel();
@@ -64,11 +62,11 @@ public class SellPanel extends JPanel implements ActionListener{
         symbolField.setPreferredSize(new Dimension(200, 25));
         symbolField.setFont(new Font("Helvetica", Font.PLAIN, 13));
 
-        JLabel quantityFieldLabel = new JLabel("Quantity");
-        quantityFieldLabel.setFont(new Font("Helvetica", Font.PLAIN, 13));
-        quantityField = new JTextField();
-        quantityField.setPreferredSize(new Dimension(200, 25));
-        quantityField.setFont(new Font("Helvetica", Font.PLAIN, 13));
+        JLabel nameFieldLabel = new JLabel("Name");
+        nameFieldLabel.setFont(new Font("Helvetica", Font.PLAIN, 13));
+        nameField = new JTextField();
+        nameField.setPreferredSize(new Dimension(200, 25));
+        nameField.setFont(new Font("Helvetica", Font.PLAIN, 13));
 
         JLabel priceFieldLabel = new JLabel("Price");
         priceFieldLabel.setFont(new Font("Helvetica", Font.PLAIN, 13));
@@ -85,9 +83,9 @@ public class SellPanel extends JPanel implements ActionListener{
 
         gbc.gridx = 0;
         gbc.gridy = 1;
-        fieldListPanel.add(quantityFieldLabel, gbc);
+        fieldListPanel.add(nameFieldLabel, gbc);
         gbc.gridx = 1;
-        fieldListPanel.add(quantityField, gbc);
+        fieldListPanel.add(nameField, gbc);
 
         gbc.gridx = 0;
         gbc.gridy = 2;
@@ -100,34 +98,42 @@ public class SellPanel extends JPanel implements ActionListener{
 
         upperPanel.add(leftOfUpperPanel);
 
-        // LEFT UPPER PANEL
+        // RIGHT UPPER PANEL
 
-        rightOfUpperPanel = new JPanel(new GridLayout(2,1));
+        rightOfUpperPanel = new JPanel(new GridLayout(3,1));
         rightOfUpperPanel.setBackground(Color.WHITE);
 
         // Create panels to wrap the buttons
-        JPanel resetButtonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 50));
-        resetButtonPanel.setBackground(Color.WHITE);
-        JPanel sellButtonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 20));
-        sellButtonPanel.setBackground(Color.WHITE);
+        JPanel prevButtonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 20));
+        prevButtonPanel.setBackground(Color.WHITE);
+        JPanel nextButtonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 20));
+        nextButtonPanel.setBackground(Color.WHITE);
+        JPanel saveButtonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 20));
+        saveButtonPanel.setBackground(Color.WHITE);
 
-        resetButton = new JButton("Reset");
-        resetButton.setFont(new Font("Helvetica", Font.PLAIN, 13));
-        resetButton.setBackground(Color.WHITE);
-        sellButton = new JButton("Sell");
-        sellButton.setFont(new Font("Helvetica", Font.PLAIN, 13));
-        sellButton.setBackground(Color.WHITE);
+        prevButton = new JButton("Prev");
+        prevButton.setFont(new Font("Helvetica", Font.PLAIN, 13));
+        prevButton.setBackground(Color.WHITE);
+        nextButton = new JButton("Next");
+        nextButton.setFont(new Font("Helvetica", Font.PLAIN, 13));
+        nextButton.setBackground(Color.WHITE);
+        saveButton = new JButton("Next");
+        saveButton.setFont(new Font("Helvetica", Font.PLAIN, 13));
+        saveButton.setBackground(Color.WHITE);
 
         Dimension buttonSize = new Dimension(100, 35); // Width: 80, Height: 30
-        resetButton.setPreferredSize(buttonSize);
-        sellButton.setPreferredSize(buttonSize);
+        prevButton.setPreferredSize(buttonSize);
+        nextButton.setPreferredSize(buttonSize);
+        saveButton.setPreferredSize(buttonSize);
 
-        resetButtonPanel.add(resetButton);
-        sellButtonPanel.add(sellButton);
+        prevButtonPanel.add(prevButton);
+        nextButtonPanel.add(nextButton);
+        saveButtonPanel.add(saveButton);
 
         // Add the panels to the rightOfUpperPanel
-        rightOfUpperPanel.add(resetButtonPanel);
-        rightOfUpperPanel.add(sellButtonPanel);
+        rightOfUpperPanel.add(prevButtonPanel);
+        rightOfUpperPanel.add(nextButtonPanel);
+        rightOfUpperPanel.add(saveButtonPanel);
 
         upperPanel.add(rightOfUpperPanel);
         
