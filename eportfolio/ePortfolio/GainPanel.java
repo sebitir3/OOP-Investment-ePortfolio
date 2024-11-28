@@ -5,14 +5,13 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
-public class GainPanel extends JPanel implements ActionListener, MessageListener{
+public class GainPanel extends JPanel implements MessageListener{
     private Portfolio portfolio;
 
     private JPanel upperPanel;
     private JLabel panelTitle;
+
     private JPanel fieldListPanel;
     private JTextField gainField;
 
@@ -89,17 +88,18 @@ public class GainPanel extends JPanel implements ActionListener, MessageListener
     }
 
     @Override
-    public void actionPerformed(ActionEvent e) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'actionPerformed'");
-    }
-
-    @Override
     public void appendMessage(String message) {
-        messagesArea.setText(message + "\n");
+        messagesArea.append(message + "\n");
     }
 
     @Override
-    public void setFields(String symbol, String name, String price) {}
+    public void setMessage(String message) {
+        messagesArea.setText("");
+    }
+
+    @Override
+    public void setFields(String symbol, String name, String price) {
+        gainField.setText(price);
+    }
 }
 

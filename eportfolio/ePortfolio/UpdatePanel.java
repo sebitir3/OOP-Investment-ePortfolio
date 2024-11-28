@@ -190,13 +190,17 @@ public class UpdatePanel extends JPanel implements ActionListener, MessageListen
 
         } else if (buttonCommand.equals("Save")){
             double updatePrice = Double.parseDouble(priceField.getText().trim());
-            System.out.println(updatePrice);
             portfolio.updateInvesments(updatePrice, true, true);
         }
     }
 
     @Override
     public void appendMessage(String message) {
+        messagesArea.append(message + "\n");
+    }
+
+    @Override
+    public void setMessage(String message) {
         messagesArea.setText(message + "\n");
     }
 

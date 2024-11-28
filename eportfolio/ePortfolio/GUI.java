@@ -101,11 +101,12 @@ public class GUI extends JFrame implements ActionListener{
             case "Buy":
             case "Sell":
             case "Update":
+                portfolio.initialInvestmentShown();
             case "Gain":
+                portfolio.getInvestmentGain();
             case "Search":
                 // Switch to the corresponding panel
                 cardLayout.show(containerPanel, actionString);
-                portfolio.initialInvestmentShown();
                 break;
             case "Quit":
                 // Exit the program
@@ -116,20 +117,33 @@ public class GUI extends JFrame implements ActionListener{
 
     // buy communication
     public void handleBuyAction(String message) {
-        buyPanel.appendMessage(message);
+        buyPanel.setMessage(message);
     }
     
     // sell communication
     public void handleSellAction(String message) {
-        sellPanel.appendMessage(message);
+        sellPanel.setMessage(message);
     }
 
-    // 
+    // update communication
     public void handleUpdateMessage(String message) {
-        updatePanel.appendMessage(message);
+        updatePanel.setMessage(message);
     }
 
     public void handleUpdateFields(String symbol, String name, String price) {
         updatePanel.setFields(symbol, name, price);;
+    }
+
+    // gain communication
+    public void handleGainMessage(String message) {
+        gainPanel.appendMessage(message);
+    }
+
+    public void clearGainMessage(String message) {
+        gainPanel.setMessage(message);
+    }
+
+    public void handleGainFields(String symbol, String name, String price) {
+        gainPanel.setFields(symbol, name, price);;
     }
 }

@@ -197,6 +197,11 @@ public class SellPanel extends JPanel implements ActionListener, MessageListener
 
     @Override
     public void appendMessage(String message) {
+        messagesArea.append(message + "\n");
+    }
+
+    @Override
+    public void setMessage(String message) {
         messagesArea.setText(message + "\n");
     }
 

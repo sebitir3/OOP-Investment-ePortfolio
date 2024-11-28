@@ -540,7 +540,9 @@ public class Portfolio{
      * This methods allows user to check there current
      * gain of all their stocks and mutual funds
      */
-    private void getInvestmentGain(){
+    public void getInvestmentGain(){
+        // clear the messageArea
+        gui.clearGainMessage("");
         gainSum = 0;
         // PRINT GET GAIN TO USER
         for (int i = 0; i < listOfInvestments.size(); i++) {
@@ -549,18 +551,20 @@ public class Portfolio{
                 Stock aStock = (Stock)listOfInvestments.get(i);
                 // add to the gain sum
                 double stockGain = aStock.getGain(aStock.getQuantity(), aStock.getPrice());
+                gui.handleGainMessage("The gain on " + aStock.getName() + " (" + aStock.getSymbol() +") is: $" + df.format(stockGain));
                 gainSum += stockGain;
             } else if (listOfInvestments.get(i) instanceof MutualFund){
                 // create new mutual fund object by downcasting current investment
                 MutualFund aFund = (MutualFund)listOfInvestments.get(i);
                 // add to the gain sum
                 double fundGain = aFund.getGain(aFund.getQuantity(), aFund.getPrice());
+                gui.handleGainMessage("The gain on " + aFund.getName() + " (" + aFund.getSymbol() +") is: $" + df.format(fundGain));
                 gainSum += fundGain;
             }        
         }
         df.setRoundingMode(RoundingMode.UP);
-        // print gain with 2 decimal places
-        System.out.println("So far, your potential gain from investestments is: $" + df.format(gainSum));
+        // set gain field with 2 decimal places
+        gui.handleGainFields("","","$" + df.format(gainSum));
     }
 
     // SEARCH INVESTMENTS
