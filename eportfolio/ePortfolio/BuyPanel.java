@@ -11,7 +11,6 @@ import java.awt.event.ActionListener;
 public class BuyPanel extends JPanel implements ActionListener, MessageListener{
     private Portfolio portfolio;
 
-
     private JPanel upperPanel;
 
     private JPanel leftOfUpperPanel;
@@ -214,6 +213,11 @@ public class BuyPanel extends JPanel implements ActionListener, MessageListener{
         
                 // Call the Portfolio's buyInvestments method
                 portfolio.buyInvestments(type, symbol, name, quantity, price);
+
+                symbolField.setText("");
+                nameField.setText("");;
+                quantityField.setText("");;
+                priceField.setText("");;
         
                 // Provide feedback to the user
             //} catch (NumberFormatException ex) {

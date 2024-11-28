@@ -8,7 +8,9 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class SellPanel extends JPanel implements ActionListener{
+public class SellPanel extends JPanel implements ActionListener, MessageListener{
+    private Portfolio portfolio;
+
     private JPanel upperPanel;
 
     private JPanel leftOfUpperPanel;
@@ -31,7 +33,10 @@ public class SellPanel extends JPanel implements ActionListener{
 
     private JTextArea messagesArea;
 
-    public SellPanel() {
+    public SellPanel(Portfolio portfolio) {
+        this.portfolio = portfolio;
+        portfolio.setMessageListener(this);
+
         setLayout(new GridLayout(2,1));
         
         setBackground(Color.WHITE);
@@ -114,9 +119,12 @@ public class SellPanel extends JPanel implements ActionListener{
         resetButton = new JButton("Reset");
         resetButton.setFont(new Font("Helvetica", Font.PLAIN, 13));
         resetButton.setBackground(Color.WHITE);
+        resetButton.addActionListener(this);
+
         sellButton = new JButton("Sell");
         sellButton.setFont(new Font("Helvetica", Font.PLAIN, 13));
         sellButton.setBackground(Color.WHITE);
+        sellButton.addActionListener(this);
 
         Dimension buttonSize = new Dimension(100, 35); // Width: 80, Height: 30
         resetButton.setPreferredSize(buttonSize);
@@ -162,8 +170,34 @@ public class SellPanel extends JPanel implements ActionListener{
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'actionPerformed'");
+        String buttonCommand = e.getActionCommand();
+        if(buttonCommand.equals("Reset")){
+            symbolField.setText("");
+            quantityField.setText("");;
+            priceField.setText("");;
+        } else if (buttonCommand.equals("Sell")){
+            //try {
+                String symbol = symbolField.getText().trim();
+                int quantity = Integer.parseInt(quantityField.getText().trim());
+                double price = Double.parseDouble(priceField.getText().trim());
+
+                symbolField.setText("");
+                quantityField.setText("");;
+                priceField.setText("");;
+        
+                // Call the Portfolio's buyInvestments method
+                portfolio.sellInvestments(symbol, quantity, price);
+        
+                // Provide feedback to the user
+            //} catch (NumberFormatException ex) {
+                //messagesArea.append("Invalid input. Please check your fields.\n");
+            //}
+        }
+    }
+
+    @Override
+    public void appendMessage(String message) {
+        messagesArea.setText(message + "\n");
     }
 }
 

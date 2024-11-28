@@ -1,7 +1,5 @@
 package ePortfolio;
 
-import java.io.*;
-import java.util.*;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -12,6 +10,10 @@ public class GUI extends JFrame implements ActionListener{
     private JPanel containerPanel;
 
     private Portfolio portfolio;
+
+    private BuyPanel buyPanel;
+    private SellPanel sellPanel;
+
 
     public GUI () {
         setTitle("Investment Portfolio");
@@ -24,12 +26,16 @@ public class GUI extends JFrame implements ActionListener{
         cardLayout = new CardLayout();
         containerPanel = new JPanel(cardLayout);
 
-        Portfolio portfolio = new Portfolio();
+        portfolio = new Portfolio();
+        portfolio.setGUI(this);
+
+        buyPanel = new BuyPanel(portfolio);
+        sellPanel = new SellPanel(portfolio);
 
         // Add panels
         containerPanel.add(new InitialPanel(), "Initial");
-        containerPanel.add(new BuyPanel(portfolio), "Buy");
-        containerPanel.add(new SellPanel(), "Sell");
+        containerPanel.add(buyPanel, "Buy");
+        containerPanel.add(sellPanel, "Sell");
         containerPanel.add(new UpdatePanel(), "Update");
         containerPanel.add(new GainPanel(), "Gain");
         containerPanel.add(new SearchPanel(), "Search");
@@ -99,5 +105,13 @@ public class GUI extends JFrame implements ActionListener{
                 System.exit(0);
                 break;
         }
+    }
+
+    public void handleBuyAction(String message) {
+        buyPanel.appendMessage(message);
+    }
+    
+    public void handleSellAction(String message) {
+        sellPanel.appendMessage(message);
     }
 }
