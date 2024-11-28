@@ -9,6 +9,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class SearchPanel extends JPanel implements ActionListener{
+    private Portfolio portfolio;
+
     private JPanel upperPanel;
 
     private JPanel leftOfUpperPanel;
@@ -30,7 +32,10 @@ public class SearchPanel extends JPanel implements ActionListener{
 
     private JTextArea messagesArea;
 
-    public SearchPanel() {
+    public SearchPanel(Portfolio portfolio) {
+        this.portfolio = portfolio;
+        //portfolio.setMessageListener(this);
+
         setLayout(new GridLayout(2,1));
         
         setBackground(Color.WHITE);

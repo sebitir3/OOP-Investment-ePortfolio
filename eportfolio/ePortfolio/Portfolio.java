@@ -25,6 +25,8 @@ public class Portfolio{
 
     private MessageListener messageListener;
 
+    private int investmentPos = 0;
+
     private GUI gui;
     
         // Setter method to initialize the GUI reference
@@ -117,7 +119,7 @@ public class Portfolio{
 
                 case "u":
                 case "update":
-                    portfolio.updateInvesments(scanner);
+                    //portfolio.updateInvesments(scanner);
                     break;
 
                 case "g":
@@ -462,57 +464,74 @@ public class Portfolio{
      * 
      * @param scanner - for user inputs
      */
-    private void updateInvesments(Scanner scanner){
+    public void updateInvesments(double updatedPrice, boolean increasedPos, boolean saved){
         // UPDATE PRICES FOR ALL INVESTMENTS
-        // update stocks first
-        boolean updatingAStock = true;
-        // iterate through stocks and update price for each stock
-        if (listOfInvestments.isEmpty()) {
-            System.out.println("There are no investments to update. Please buy investments to update prices.");
-        } else {
-            for (int i = 0; i < listOfInvestments.size(); i++) {
-                // if the current investment is a stock object
-                if(listOfInvestments.get(i) instanceof Stock){
-                    // for price validation
-                    updatingAStock = true;
-
-                    // create new stock object by downcasting current investment
-                    Stock updatedStock = (Stock)listOfInvestments.get(i);
-
-                    // print current price
-                    System.out.println("The current price for " + updatedStock.getSymbol() + " is: $" + df.format(updatedStock.getPrice()));
-
-                    // ask user for the updated price and validate
-                    double updatedStockPrice = 0;
-                    updatedStockPrice = priceValidationForUpdate(scanner, updatedStockPrice, updatingAStock);
-
-                    updatedStock.setPrice(updatedStockPrice);
-                    System.out.println("The updated price for " + updatedStock.getSymbol() + " is: $" + df.format(updatedStock.getPrice()));
-                    System.out.println(""); // spacer
-
-                } 
-                // if the current investment is a mutual fund object
-                else if(listOfInvestments.get(i) instanceof MutualFund){
-                    // for price validation
-                    updatingAStock = false;
-
-                    // create new mutual fund object by downcasting current investment
-                    MutualFund updatedFund = (MutualFund)listOfInvestments.get(i);
-
-                    // print current price
-                    System.out.println("The current price for " + updatedFund.getSymbol() + " is: $" + df.format(updatedFund.getPrice()));
-
-                    // ask user for updated price and validate
-                    double updatedFundPrice = 0;
-                    updatedFundPrice = priceValidationForUpdate(scanner, updatedFundPrice, updatingAStock);
-
-                    updatedFund.setPrice(updatedFundPrice);
-                    System.out.println("The updated price for " + updatedFund.getSymbol() + " is: $" + df.format(updatedFund.getPrice()));
-                    System.out.println(""); // spacer
+        if(!saved){ // don't change the position if saving
+            if(increasedPos){
+                investmentPos++;
+                if(investmentPos >= listOfInvestments.size()){
+                    investmentPos = 0;
                 }
-                
+            } else if (!increasedPos){
+                investmentPos--;
+                if(investmentPos < 0){
+                    investmentPos = listOfInvestments.size() - 1;
+                }
             }
-            scanner.nextLine(); // consume new line character
+        }
+        
+        boolean updatingAStock = true;  
+        // if the current investment is a stock object
+        if(listOfInvestments.get(investmentPos) instanceof Stock){
+            // for price validation
+            updatingAStock = true;
+
+            // create new stock object by downcasting current investment
+            Stock updatedStock = (Stock)listOfInvestments.get(investmentPos);
+
+            // print current price
+            gui.handleUpdateFields(updatedStock.getSymbol(), updatedStock.getName(), df.format(updatedStock.getPrice()));
+
+            System.out.println();
+
+            if(saved){
+                updatedPrice = priceValidationForUpdate(updatedPrice, updatingAStock);
+
+                updatedStock.setPrice(updatedPrice);
+                gui.handleUpdateFields(updatedStock.getSymbol(), updatedStock.getName(), df.format(updatedStock.getPrice()));
+                gui.handleUpdateMessage("The updated price for " + updatedStock.getSymbol() + " is: $" + df.format(updatedStock.getPrice()));
+            }
+        } 
+        // if the current investment is a mutual fund object
+        else if(listOfInvestments.get(investmentPos) instanceof MutualFund){
+            // for price validation
+            updatingAStock = false;
+
+            // create new mutual fund object by downcasting current investment
+            MutualFund updatedFund = (MutualFund)listOfInvestments.get(investmentPos);
+
+            // print current price
+            gui.handleUpdateFields(updatedFund.getSymbol(), updatedFund.getName(), df.format(updatedFund.getPrice()));
+
+            if(saved){
+                //updatedFund = (MutualFund)listOfInvestments.get(investmentPos++); // fix offset from boolean
+                updatedPrice = priceValidationForUpdate(updatedPrice, updatingAStock);
+
+                updatedFund.setPrice(updatedPrice);
+                gui.handleUpdateFields(updatedFund.getSymbol(), updatedFund.getName(), df.format(updatedFund.getPrice()));
+                gui.handleUpdateMessage("The updated price for " + updatedFund.getSymbol() + " is: $" + df.format(updatedFund.getPrice()));
+            }
+            
+        }
+        
+    }
+
+    public void initialInvestmentShown(){
+        if(!listOfInvestments.isEmpty()){
+            gui.handleUpdateMessage("");
+            gui.handleUpdateFields(listOfInvestments.get(0).getSymbol(), listOfInvestments.get(0).getName(), df.format(listOfInvestments.get(0).getPrice()));
+        } else {
+            gui.handleUpdateMessage("There are no investments to update. Please buy investments to update prices.");
         }
     }
 
@@ -759,21 +778,12 @@ public class Portfolio{
      * @param validPrice - the price value to validate
      * @param ifStock - if stock or mutual fund
      */
-    private double priceValidationForUpdate(Scanner scanner, double validPrice, boolean ifStock){
+    private double priceValidationForUpdate(double validPrice, boolean ifStock){
         boolean validInput = false;
 
         // loop until valid input   
         while (!validInput){
             try {
-                // print dependant on stock or mutual fund (i.e. shares or units)
-                if(ifStock){
-                    System.out.println("Enter the new price of each share: ");
-                } else {
-                    System.out.println("Enter the new price of each unit: ");
-                }
-                // get price from user
-                validPrice = scanner.nextDouble();
-
                 // only exit the loop if price is a positive number
                 if (validPrice <= 0){
                     System.out.println("Enter a positive price.");
@@ -783,7 +793,6 @@ public class Portfolio{
             // throw input mismatch exception and ask again until valid
             } catch (InputMismatchException e){
                 System.out.println("Invalid input. Please enter a number.");
-                scanner.next();
             }
         }
         return validPrice;

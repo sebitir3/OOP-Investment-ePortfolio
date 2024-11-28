@@ -8,7 +8,9 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class GainPanel extends JPanel implements ActionListener{
+public class GainPanel extends JPanel implements ActionListener, MessageListener{
+    private Portfolio portfolio;
+
     private JPanel upperPanel;
     private JLabel panelTitle;
     private JPanel fieldListPanel;
@@ -17,7 +19,10 @@ public class GainPanel extends JPanel implements ActionListener{
     private JPanel lowerPanel;
     private JTextArea messagesArea;
 
-    public GainPanel() {
+    public GainPanel(Portfolio portfolio) {
+        this.portfolio = portfolio;
+        portfolio.setMessageListener(this);
+        
         setLayout(new GridLayout(2,1));
         
         setBackground(Color.WHITE);
@@ -88,5 +93,13 @@ public class GainPanel extends JPanel implements ActionListener{
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'actionPerformed'");
     }
+
+    @Override
+    public void appendMessage(String message) {
+        messagesArea.setText(message + "\n");
+    }
+
+    @Override
+    public void setFields(String symbol, String name, String price) {}
 }
 

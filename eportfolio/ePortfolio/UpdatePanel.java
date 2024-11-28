@@ -8,7 +8,9 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class UpdatePanel extends JPanel implements ActionListener{
+public class UpdatePanel extends JPanel implements ActionListener, MessageListener{
+    private Portfolio portfolio;
+
     private JPanel upperPanel;
 
     private JPanel leftOfUpperPanel;
@@ -29,7 +31,10 @@ public class UpdatePanel extends JPanel implements ActionListener{
     private JPanel lowerPanel;
     private JTextArea messagesArea;
 
-    public UpdatePanel() {
+    public UpdatePanel(Portfolio portfolio) {
+        this.portfolio = portfolio;
+        portfolio.setMessageListener(this);
+
         setLayout(new GridLayout(2,1));
         
         setBackground(Color.WHITE);
@@ -61,12 +66,14 @@ public class UpdatePanel extends JPanel implements ActionListener{
         symbolField = new JTextField();
         symbolField.setPreferredSize(new Dimension(200, 25));
         symbolField.setFont(new Font("Helvetica", Font.PLAIN, 13));
+        symbolField.setEditable(false);
 
         JLabel nameFieldLabel = new JLabel("Name");
         nameFieldLabel.setFont(new Font("Helvetica", Font.PLAIN, 13));
         nameField = new JTextField();
         nameField.setPreferredSize(new Dimension(200, 25));
         nameField.setFont(new Font("Helvetica", Font.PLAIN, 13));
+        nameField.setEditable(false);
 
         JLabel priceFieldLabel = new JLabel("Price");
         priceFieldLabel.setFont(new Font("Helvetica", Font.PLAIN, 13));
@@ -114,12 +121,17 @@ public class UpdatePanel extends JPanel implements ActionListener{
         prevButton = new JButton("Prev");
         prevButton.setFont(new Font("Helvetica", Font.PLAIN, 13));
         prevButton.setBackground(Color.WHITE);
+        prevButton.addActionListener(this);
+
         nextButton = new JButton("Next");
         nextButton.setFont(new Font("Helvetica", Font.PLAIN, 13));
         nextButton.setBackground(Color.WHITE);
-        saveButton = new JButton("Next");
+        nextButton.addActionListener(this);
+
+        saveButton = new JButton("Save");
         saveButton.setFont(new Font("Helvetica", Font.PLAIN, 13));
         saveButton.setBackground(Color.WHITE);
+        saveButton.addActionListener(this);
 
         Dimension buttonSize = new Dimension(100, 35); // Width: 80, Height: 30
         prevButton.setPreferredSize(buttonSize);
@@ -164,12 +176,35 @@ public class UpdatePanel extends JPanel implements ActionListener{
 
         add(upperPanel); 
         add(lowerPanel);
+
+    }
+
+   @Override
+    public void actionPerformed(ActionEvent e) {
+        String buttonCommand = e.getActionCommand();
+        if(buttonCommand.equals("Prev")){
+            portfolio.updateInvesments(0, false, false);
+            
+        } else if (buttonCommand.equals("Next")){
+            portfolio.updateInvesments(0, true, false);
+
+        } else if (buttonCommand.equals("Save")){
+            double updatePrice = Double.parseDouble(priceField.getText().trim());
+            System.out.println(updatePrice);
+            portfolio.updateInvesments(updatePrice, true, true);
+        }
     }
 
     @Override
-    public void actionPerformed(ActionEvent e) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'actionPerformed'");
+    public void appendMessage(String message) {
+        messagesArea.setText(message + "\n");
+    }
+
+    @Override
+    public void setFields(String symbol, String name, String price) {
+        symbolField.setText(symbol);
+        nameField.setText(name);
+        priceField.setText(price);
     }
 }
 

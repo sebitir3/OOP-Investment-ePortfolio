@@ -13,6 +13,9 @@ public class GUI extends JFrame implements ActionListener{
 
     private BuyPanel buyPanel;
     private SellPanel sellPanel;
+    private UpdatePanel updatePanel;
+    private GainPanel gainPanel;
+    private SearchPanel searchPanel;
 
 
     public GUI () {
@@ -31,14 +34,17 @@ public class GUI extends JFrame implements ActionListener{
 
         buyPanel = new BuyPanel(portfolio);
         sellPanel = new SellPanel(portfolio);
+        updatePanel = new UpdatePanel(portfolio);
+        gainPanel = new GainPanel(portfolio);
+        searchPanel = new SearchPanel(portfolio);
 
         // Add panels
         containerPanel.add(new InitialPanel(), "Initial");
         containerPanel.add(buyPanel, "Buy");
         containerPanel.add(sellPanel, "Sell");
-        containerPanel.add(new UpdatePanel(), "Update");
-        containerPanel.add(new GainPanel(), "Gain");
-        containerPanel.add(new SearchPanel(), "Search");
+        containerPanel.add(updatePanel, "Update");
+        containerPanel.add(gainPanel, "Gain");
+        containerPanel.add(searchPanel, "Search");
 
         add(containerPanel, BorderLayout.CENTER);
 
@@ -99,6 +105,7 @@ public class GUI extends JFrame implements ActionListener{
             case "Search":
                 // Switch to the corresponding panel
                 cardLayout.show(containerPanel, actionString);
+                portfolio.initialInvestmentShown();
                 break;
             case "Quit":
                 // Exit the program
@@ -107,11 +114,22 @@ public class GUI extends JFrame implements ActionListener{
         }
     }
 
+    // buy communication
     public void handleBuyAction(String message) {
         buyPanel.appendMessage(message);
     }
     
+    // sell communication
     public void handleSellAction(String message) {
         sellPanel.appendMessage(message);
+    }
+
+    // 
+    public void handleUpdateMessage(String message) {
+        updatePanel.appendMessage(message);
+    }
+
+    public void handleUpdateFields(String symbol, String name, String price) {
+        updatePanel.setFields(symbol, name, price);;
     }
 }
