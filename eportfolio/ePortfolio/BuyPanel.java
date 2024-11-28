@@ -200,9 +200,9 @@ public class BuyPanel extends JPanel implements ActionListener, MessageListener{
         String buttonCommand = e.getActionCommand();
         if(buttonCommand.equals("Reset")){
             symbolField.setText("");
-            nameField.setText("");;
-            quantityField.setText("");;
-            priceField.setText("");;
+            nameField.setText("");
+            quantityField.setText("");
+            priceField.setText("");
         } else if (buttonCommand.equals("Buy")){
             //try {
                 String type = (String) typeField.getSelectedItem();

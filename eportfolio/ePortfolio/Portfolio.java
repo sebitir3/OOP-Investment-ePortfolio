@@ -124,12 +124,12 @@ public class Portfolio{
 
                 case "g":
                 case "gain":
-                    portfolio.getInvestmentGain();
+                    //portfolio.getInvestmentGain();
                     break;
 
                 case "se":
                 case "search":
-                    portfolio.searchInvestments(scanner);
+                    //portfolio.searchInvestments(scanner);
                     break;
 
                 case "q":
@@ -575,20 +575,13 @@ public class Portfolio{
      * 
      * @param scanner - for user input
      */
-    private void searchInvestments(Scanner scanner){
-        // ask user for symbol, keywords and range
-        System.out.println("Enter the symbol to search for (optional: leave blank to not search for any symbol)");
-        String symbolSearch = scanner.nextLine().trim();
-        System.out.println("Enter keywords seperated by spaces to search for (optional: leave blank to not search for any keywords)");
-        String keywordSearch = scanner.nextLine().trim().toLowerCase();
-        System.out.println("Enter a price range seperated to search for (optional: leave blank to not search for any range)");
-        String rangeSearch = scanner.nextLine().trim();
+    public void searchInvestments(String symbolSearch, String keywordSearch, String lowerBound, String upperBound){
+        // clear the message area
+        gui.clearSearchMessage("");
 
         boolean foundInvestment = true;
         boolean isValidRange = true;
 
-        //HashMap<String, ArrayList<Integer>> index = new HashMap<String,ArrayList<Integer>>();
-        //ArrayList<Integer> keywordIndices = new ArrayList<>();
         ArrayList<Integer> intersectedIndices = new ArrayList<>();
 
         // found counter
@@ -603,13 +596,10 @@ public class Portfolio{
             // ITERSECT ALL SIMILAR INDICIES FOR EACH KEYWORD
             for (int j = 0; j < keywords.length; j++) {
                 String keyword = keywords[j];
-                //System.out.println(keyword);
 
                 // put the first keyowrd in the intersectedIndicies array list
                 if (index.containsKey(keyword)) {
                     ArrayList<Integer> keywordIndices = index.get(keyword);
-                    //System.out.println(keywordIndices);
-
                     // add all indices to intersectedIndices for the first keyword
                     if (j == 0){
                         intersectedIndices.addAll(keywordIndices);
@@ -648,67 +638,38 @@ public class Portfolio{
                 }
             }
 
-            // check if price range not empty
-            if(!rangeSearch.isEmpty() && isValidRange){
-                // if the range has - in it, it means its not an exact value
-                if(rangeSearch.contains("-")){
-                    // set upper and lower bounds
-                    String[] bounds = rangeSearch.split("-");
-                    String lowerBound = bounds[0].trim();
-                    String upperBound;
-                    if (bounds.length > 1){
-                        upperBound = bounds[1].trim();
-                    } else {
-                        upperBound = "";
-                    }
 
-                    // check if lower bound is not empty
-                    if(!lowerBound.isEmpty()){
-                        double lowerValue = Double.parseDouble(lowerBound);
-                        // see if stock price falls below lower bound
-                        // if so dont print the stock
-                        if (listOfInvestments.get(j).getPrice() < lowerValue){
-                            foundInvestment = false;
-                        }
-                    }
-
-                    // check if upper bound is not empty
-                    if (!upperBound.isEmpty()) {
-                        double upperValue = Double.parseDouble(upperBound);
-                        // see if stock price is above upper bound
-                        // if so dont print stock
-                        if (listOfInvestments.get(j).getPrice() > upperValue) {
-                            foundInvestment = false;
-                        }
-                    }
-                // check for invalid range
-                } else if (rangeSearch.contains(" ")){
-                    System.out.println("Error: invalid range! Please enter a valid range that contains '-'.");
+            // check if lower bound is not empty
+            if(!lowerBound.isEmpty()){
+                double lowerValue = Double.parseDouble(lowerBound);
+                // see if stock price falls below lower bound
+                // if so dont print the stock
+                if (listOfInvestments.get(j).getPrice() < lowerValue){
                     foundInvestment = false;
-                    isValidRange = false;
-                    
-                } else {
-                    double exactPrice = Double.parseDouble(rangeSearch);
-                    // see if stock doesn't match exact price
-                    // if so, dont print stock
-                    if(listOfInvestments.get(j).getPrice() != exactPrice) {
-                        foundInvestment = false;
-                    }
+                }
+            }
+
+            // check if upper bound is not empty
+            if (!upperBound.isEmpty()) {
+                double upperValue = Double.parseDouble(upperBound);
+                // see if stock price is above upper bound
+                // if so dont print stock
+                if (listOfInvestments.get(j).getPrice() > upperValue) {
+                    foundInvestment = false;
                 }
             }
 
             // if condition maintains true (survived all filters), then print
             if(foundInvestment && isValidRange){
-                System.out.println(listOfInvestments.get(j).toString());
+                gui.handleSearchMessage(listOfInvestments.get(j).toString());
                 foundCount ++;
             }
         }
         
         // no investments found
         if (foundCount == 0 && isValidRange){
-            System.out.println("No investments found.");
+            gui.handleSearchMessage("No investments found.");
         }
-
     }     
 
     // INPUT VALIDATION HELPERS FOR BUY AND SELL

@@ -146,4 +146,13 @@ public class GUI extends JFrame implements ActionListener{
     public void handleGainFields(String symbol, String name, String price) {
         gainPanel.setFields(symbol, name, price);;
     }
+
+    // search communication
+    public void clearSearchMessage(String message) {
+        searchPanel.setMessage(message);
+    }
+
+    public void handleSearchMessage(String message) {
+        searchPanel.appendMessage(message);
+    }
 }

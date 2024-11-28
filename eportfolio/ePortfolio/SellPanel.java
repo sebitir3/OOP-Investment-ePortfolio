@@ -173,8 +173,8 @@ public class SellPanel extends JPanel implements ActionListener, MessageListener
         String buttonCommand = e.getActionCommand();
         if(buttonCommand.equals("Reset")){
             symbolField.setText("");
-            quantityField.setText("");;
-            priceField.setText("");;
+            quantityField.setText("");
+            priceField.setText("");
         } else if (buttonCommand.equals("Sell")){
             //try {
                 String symbol = symbolField.getText().trim();

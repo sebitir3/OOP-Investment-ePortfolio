@@ -8,7 +8,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class SearchPanel extends JPanel implements ActionListener{
+public class SearchPanel extends JPanel implements ActionListener, MessageListener{
     private Portfolio portfolio;
 
     private JPanel upperPanel;
@@ -139,9 +139,12 @@ public class SearchPanel extends JPanel implements ActionListener{
         resetButton = new JButton("Reset");
         resetButton.setFont(new Font("Helvetica", Font.PLAIN, 13));
         resetButton.setBackground(Color.WHITE);
+        resetButton.addActionListener(this);
+
         searchButton = new JButton("Search");
         searchButton.setFont(new Font("Helvetica", Font.PLAIN, 13));
         searchButton.setBackground(Color.WHITE);
+        searchButton.addActionListener(this);
 
         Dimension buttonSize = new Dimension(100, 35); // Width: 80, Height: 30
         resetButton.setPreferredSize(buttonSize);
@@ -187,8 +190,45 @@ public class SearchPanel extends JPanel implements ActionListener{
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'actionPerformed'");
+        String buttonCommand = e.getActionCommand();
+        if(buttonCommand.equals("Reset")){
+            symbolField.setText("");
+            nameKeyField.setText("");
+            lowField.setText("");
+            highField.setText("");
+        } else if (buttonCommand.equals("Search")){
+            //try {
+                String symbol = symbolField.getText().trim();
+                String searchKey = nameKeyField.getText().trim().toLowerCase();
+                String low = lowField.getText().trim();
+                String high = highField.getText().trim();
+
+                symbolField.setText("");
+                nameKeyField.setText("");
+                lowField.setText("");
+                highField.setText("");
+        
+                // Call the Portfolio's buyInvestments method
+                portfolio.searchInvestments(symbol, searchKey, low, high);
+        
+                // Provide feedback to the user
+            //} catch (NumberFormatException ex) {
+                //messagesArea.append("Invalid input. Please check your fields.\n");
+            //}
+        }
     }
+
+    @Override
+    public void appendMessage(String message) {
+        messagesArea.append(message + "\n");
+    }
+
+    @Override
+    public void setMessage(String message) {
+        messagesArea.setText(message);
+    }
+
+    @Override
+    public void setFields(String symbol, String name, String price) {}
 }
 
