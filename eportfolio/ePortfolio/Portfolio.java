@@ -179,26 +179,27 @@ public class Portfolio{
                             Stock stockSold = (Stock) listOfInvestments.get(i);
                         
                             // check if quantity to sell is larger than owned stock
-                            while(quantityToSell > stockSold.getQuantity()){
+                            if(quantityToSell > stockSold.getQuantity()){
                                 gui.handleSellAction("Error: Not enough shares owned to sell.");
-                            }
-                            // for full purchase, index is removed so we must store the name of the stock in a temp var
-                            String tempName = stockSold.getName();
-                            
-                            // perform the sale    
-                            saleBookValue = stockSold.sell(quantityToSell, priceToSell, listOfInvestments, i);
-
-                            // get the payment on the stock sold
-                            double stockPayment = stockSold.getPayment(quantityToSell, priceToSell);
-
-                            // sell shares of a stock (if full sale, stock is removed from arraylist)
-                            if(quantityToSell != 1){
-                                gui.handleSellAction(quantityToSell + " shares of " + tempName + 
-                                    " (" + symbolToSell + ") were sold at $" + df.format(priceToSell) + " | Book Value of Sale: $" + df.format(saleBookValue) + " | Payment on Sale: $" + df.format(stockPayment));
                             } else {
-                                gui.handleSellAction(quantityToSell + " share of " + tempName + 
-                                    " (" + symbolToSell + ") was sold at $" + df.format(priceToSell) + " | Book Value of Sale: $" + df.format(saleBookValue) + " | Payment on Sale: $" + df.format(stockPayment));
-                            }         
+                                // for full purchase, index is removed so we must store the name of the stock in a temp var
+                                String tempName = stockSold.getName();
+                                
+                                // perform the sale    
+                                saleBookValue = stockSold.sell(quantityToSell, priceToSell, listOfInvestments, i);
+
+                                // get the payment on the stock sold
+                                double stockPayment = stockSold.getPayment(quantityToSell, priceToSell);
+
+                                // sell shares of a stock (if full sale, stock is removed from arraylist)
+                                if(quantityToSell != 1){
+                                    gui.handleSellAction(quantityToSell + " shares of " + tempName + 
+                                        " (" + symbolToSell + ") were sold at $" + df.format(priceToSell) + " | Book Value of Sale: $" + df.format(saleBookValue) + " | Payment on Sale: $" + df.format(stockPayment));
+                                } else {
+                                    gui.handleSellAction(quantityToSell + " share of " + tempName + 
+                                        " (" + symbolToSell + ") was sold at $" + df.format(priceToSell) + " | Book Value of Sale: $" + df.format(saleBookValue) + " | Payment on Sale: $" + df.format(stockPayment));
+                                }         
+                            }
                         }    
                         else if (listOfInvestments.get(i) instanceof MutualFund && listOfInvestments.get(i).getSymbol().equals(symbolToSell)) {
                             // a sale is found
@@ -210,32 +211,32 @@ public class Portfolio{
                             // modify the mutual fund found in the array list
                             gui.handleSellAction(symbolToSell + " was found!");
 
-                            while(quantityToSell > fundSold.getQuantity()){
+                            if(quantityToSell > fundSold.getQuantity()){
                                 gui.handleSellAction("Error: Not enough units owned to sell.");
-                            }
-
-                            // for full purchase, index is removed so we must store the name of the stock in a temp var
-                            String tempName = fundSold.getName();
-
-                            // perform mutual fund sale
-                            saleBookValue = fundSold.sell(quantityToSell, priceToSell, listOfInvestments, i);
-
-                            // get the payment on the stock sold
-                            double fundPayment = fundSold.getPayment(quantityToSell, priceToSell);
-
-                            // sell units of a mutual fund (if full sale, stock is removed from arraylist)
-                            if (quantityToSell != 1) {
-                                gui.handleSellAction(quantityToSell + " units of " + tempName 
-                                    + " (" + symbolToSell + ") were sold at $" + df.format(priceToSell) + " | Book Value of Sale: $" + df.format(saleBookValue) + " | Payment on Sale: $" + df.format(fundPayment));
                             } else {
-                                gui.handleSellAction(quantityToSell + " unit of " + tempName
-                                    + " (" + symbolToSell + ") was sold at $" + df.format(priceToSell) + " | Book Value of Sale: $" + df.format(saleBookValue) + " | Payment on Sale: $" + df.format(fundPayment));
+                                // for full purchase, index is removed so we must store the name of the stock in a temp var
+                                String tempName = fundSold.getName();
+
+                                // perform mutual fund sale
+                                saleBookValue = fundSold.sell(quantityToSell, priceToSell, listOfInvestments, i);
+
+                                // get the payment on the stock sold
+                                double fundPayment = fundSold.getPayment(quantityToSell, priceToSell);
+
+                                // sell units of a mutual fund (if full sale, stock is removed from arraylist)
+                                if (quantityToSell != 1) {
+                                    gui.handleSellAction(quantityToSell + " units of " + tempName 
+                                        + " (" + symbolToSell + ") were sold at $" + df.format(priceToSell) + " | Book Value of Sale: $" + df.format(saleBookValue) + " | Payment on Sale: $" + df.format(fundPayment));
+                                } else {
+                                    gui.handleSellAction(quantityToSell + " unit of " + tempName
+                                        + " (" + symbolToSell + ") was sold at $" + df.format(priceToSell) + " | Book Value of Sale: $" + df.format(saleBookValue) + " | Payment on Sale: $" + df.format(fundPayment));
+                                }
                             }
                         }        
                     }    
                 } 
                 if(!sellFound){
-                    gui.handleSellAction("Error: " + symbolToSell + " Investment was not found.");
+                    gui.handleSellAction("Error: Investment (" + symbolToSell + ") was not found.");
                 }
             } else {
                 gui.handleSellAction("Error: You have no investments to sell.");
