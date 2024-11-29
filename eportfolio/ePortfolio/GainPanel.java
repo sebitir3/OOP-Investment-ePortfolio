@@ -10,15 +10,39 @@ import java.awt.*;
  * The GainPanel class represents the panel in the GUI where users can see the gain on they're investments.
  */
 public class GainPanel extends JPanel implements MessageListener{
+    /**
+     * The portfolio that this panel interacts with to perform gain calculations
+     */
     private Portfolio portfolio;
 
+    /**
+     * The upper section of the panel containing the title and gain field
+     */
     private JPanel upperPanel;
+
+    /**
+     * The title label displayed at the top of the upper panel
+     */
     private JLabel panelTitle;
 
+    /**
+     * The panel containing the input or display fields for portfolio gain
+     */
     private JPanel fieldListPanel;
+
+    /**
+     * The text field for displaying the total gain of the portfolio
+     */
     private JTextField gainField;
 
+    /**
+     * The lower section of the panel containing the messages area
+     */
     private JPanel lowerPanel;
+
+    /**
+     * The text area for displaying messages or feedback to the user
+     */
     private JTextArea messagesArea;
 
     /**

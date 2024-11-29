@@ -12,29 +12,81 @@ import java.awt.event.ActionListener;
  * The BuyPanel class represents the panel in the GUI where users can buy investments.
  */
 public class BuyPanel extends JPanel implements ActionListener, MessageListener{
+    /**
+     * The portfolio that this panel interacts with to perform operations.
+     */
     private Portfolio portfolio;
 
+    /**
+     * The upper section of the panel containing input fields and buttons
+     */
     private JPanel upperPanel;
 
+    /**
+     * The left portion of the upper panel containing the title and input fields
+     */
     private JPanel leftOfUpperPanel;
+
+    /**
+     * The title label displayed at the top of the left upper panel
+     */
     private JLabel panelTitle;
 
+    /**
+     * The panel containing the input fields for type, symbol, name, quantity, and price
+     */
     private JPanel fieldListPanel;
 
+    /**
+     * The combo box allowing the user to select the type of investment (e.g., Stock, Mutual Fund)
+     */
     private JComboBox<String> typeField;
+
+    /**
+     * The text field for the user to input the symbol of the investment
+     */
     private JTextField symbolField;
+
+    /**
+     * The text field for the user to input the name of the investment
+     */
     private JTextField nameField;
+
+    /**
+     * The text field for the user to input the quantity of the investment
+     */
     private JTextField quantityField;
+
+    /**
+     * The text field for the user to input the price of the investment
+     */
     private JTextField priceField;
-    
+
+    /**
+     * The right portion of the upper panel containing the reset and buy buttons
+     */
     private JPanel rightOfUpperPanel;
 
+    /**
+     * The button to reset all input fields to their default (empty) state
+     */
     private JButton resetButton;
+
+    /**
+     * The button to initiate the "buy" operation for an investment
+     */
     private JButton buyButton;
 
+    /**
+     * The lower section of the panel containing the messages area
+     */
     private JPanel lowerPanel;
 
+    /**
+     * The text area for displaying messages or feedback to the user
+     */
     private JTextArea messagesArea;
+
 
     /**
      * Constructs BuyPanel for the GUI

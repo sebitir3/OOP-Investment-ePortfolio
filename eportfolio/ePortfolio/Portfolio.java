@@ -29,12 +29,20 @@ public class Portfolio{
 
     private GUI gui;
     
-    // Setter method to initialize the GUI reference
+    /**
+     * This methods creates an instance of a GUI to send of messages to the GUI class
+     * 
+     * @param gui instance of a GUI
+     */
     public void setGUI(GUI gui) {
         this.gui = gui;
     }
 
-    // implement messageListener
+    /**
+     * This methods itializes the message listener
+     * 
+     * @param listener the message listener
+     */
     public void setMessageListener(MessageListener listener) {
         this.messageListener = listener;
     }
@@ -313,6 +321,11 @@ public class Portfolio{
         }
     }
 
+    /**
+     * This methods prints the first investment in the list to the update panel,
+     * if no investments owned it will print an error message in the messageArea
+     * 
+     */
     public void initialInvestmentShown(){
         if(!listOfInvestments.isEmpty()){
             gui.handleUpdateMessage("");

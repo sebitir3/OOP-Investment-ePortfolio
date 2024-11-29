@@ -12,27 +12,74 @@ import java.awt.event.ActionListener;
  * The SearchPanel class represents the panel in the GUI where users can search for investments.
  */
 public class SearchPanel extends JPanel implements ActionListener, MessageListener{
+    /**
+     * The portfolio that this panel interacts with to perform search operations
+     */
     private Portfolio portfolio;
 
+    /**
+     * The upper section of the panel containing input fields and buttons for searching investments
+     */
     private JPanel upperPanel;
 
+    /**
+     * The left portion of the upper panel containing the title and search input fields
+     */
     private JPanel leftOfUpperPanel;
+
+    /**
+     * The title label displayed at the top of the left upper panel
+     */
     private JLabel panelTitle;
 
+    /**
+     * The panel containing input fields for symbol, name keywords, and price range
+     */
     private JPanel fieldListPanel;
 
+    /**
+     * The text field for the user to input the symbol of the investment to search for
+     */
     private JTextField symbolField;
+
+    /**
+     * The text field for the user to input keywords from the investment's name to search for
+     */
     private JTextField nameKeyField;
+
+    /**
+     * The text field for the user to input the lower bound of the price range for searching
+     */
     private JTextField lowField;
+
+    /**
+     * The text field for the user to input the upper bound of the price range for searching
+     */
     private JTextField highField;
-    
+
+    /**
+     * The right portion of the upper panel containing the reset and search buttons
+     */
     private JPanel rightOfUpperPanel;
 
+    /**
+     * The button to reset all search input fields to their default (empty) state
+     */
     private JButton resetButton;
+
+    /**
+     * The button to initiate the search operation based on the input criteria
+     */
     private JButton searchButton;
 
+    /**
+     * The lower section of the panel containing the messages area
+     */
     private JPanel lowerPanel;
 
+    /**
+     * The text area for displaying search results or feedback messages to the user
+     */
     private JTextArea messagesArea;
 
     /**

@@ -58,8 +58,24 @@ public abstract class Investment {
         this.bookValue = bookValue;
     }
 
+    /**
+     * This abstract method will perform a buy on an investment
+     *
+     * @param addedQuantity the quantity being purchased
+     * @param newPrice the price of the purchase
+     * @return the bookvalue of the buy 
+     */
     public abstract double buy(int addedQuantity, double newPrice);
 
+    /**
+     * This abstract method will perform a sale on an investment
+     *
+     * @param sellQuantity the quantity being sold
+     * @param salePrice the price of the sale
+     * @param inputList the list of investments that will be iterated through
+     * @param i the position of the investment in the list that will be sold
+     * @return the bookvalue of the sale 
+     */
     public abstract double sell(int sellQuantity, double salePrice, ArrayList<Investment> inputList, int i);
 
     /**

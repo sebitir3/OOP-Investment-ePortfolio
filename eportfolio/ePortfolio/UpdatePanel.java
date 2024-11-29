@@ -12,26 +12,74 @@ import java.awt.event.ActionListener;
  * The UpdatePanel class represents the panel in the GUI where users can update investments prices.
  */
 public class UpdatePanel extends JPanel implements ActionListener, MessageListener{
+    /**
+     * The portfolio that this panel interacts with to perform update operations
+     */
     private Portfolio portfolio;
 
+    /**
+     * The upper section of the panel containing input fields and navigation buttons
+     */
     private JPanel upperPanel;
 
+    /**
+     * The left portion of the upper panel containing the title and input fields
+     */
     private JPanel leftOfUpperPanel;
+
+    /**
+     * The title label displayed at the top of the left upper panel
+     */
     private JLabel panelTitle;
 
+    /**
+     * The panel containing the input fields for symbol, name, and price
+     */
     private JPanel fieldListPanel;
 
+    /**
+     * The text field for the user to view or update the symbol of the investment
+     */
     private JTextField symbolField;
+
+    /**
+     * The text field for the user to view or update the name of the investment
+     */
     private JTextField nameField;
+
+    /**
+     * The text field for the user to update the price of the investment
+     */
     private JTextField priceField;
-    
+
+    /**
+     * The right portion of the upper panel containing the navigation and save buttons
+     */
     private JPanel rightOfUpperPanel;
 
+    /**
+     * The button to navigate to the previous investment in the portfolio
+     */
     private JButton prevButton;
+
+    /**
+     * The button to navigate to the next investment in the portfolio
+     */
     private JButton nextButton;
+
+    /**
+     * The button to save updates made to the current investment
+     */
     private JButton saveButton;
 
+    /**
+     * The lower section of the panel containing the messages area
+     */
     private JPanel lowerPanel;
+
+    /**
+     * The text area for displaying messages or feedback to the user
+     */
     private JTextArea messagesArea;
 
     /**

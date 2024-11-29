@@ -12,28 +12,69 @@ import java.awt.event.ActionListener;
  * The SellPanel class represents the panel in the GUI where users can sell investments.
  */
 public class SellPanel extends JPanel implements ActionListener, MessageListener{
+    /**
+     * The portfolio that this panel interacts with to perform sell operations
+     */
     private Portfolio portfolio;
 
+    /**
+     * The upper section of the panel containing input fields and buttons
+     */
     private JPanel upperPanel;
 
+    /**
+     * The left portion of the upper panel containing the title and input fields
+     */
     private JPanel leftOfUpperPanel;
+
+    /**
+     * The title label displayed at the top of the left upper panel
+     */
     private JLabel panelTitle;
 
+    /**
+     * The panel containing the input fields for symbol, quantity, and price
+     */
     private JPanel fieldListPanel;
 
-
+    /**
+     * The text field for the user to input the symbol of the investment they want to sell
+     */
     private JTextField symbolField;
 
+    /**
+     * The text field for the user to input the quantity of the investment they want to sell
+     */
     private JTextField quantityField;
+
+    /**
+     * The text field for the user to input the price of the investment they want to sell
+     */
     private JTextField priceField;
-    
+
+    /**
+     * The right portion of the upper panel containing the reset and sell buttons
+     */
     private JPanel rightOfUpperPanel;
 
+    /**
+     * The button to reset all input fields to their default (empty) state
+     */
     private JButton resetButton;
+
+    /**
+     * The button to initiate the "sell" operation for an investment
+     */
     private JButton sellButton;
 
+    /**
+     * The lower section of the panel containing the messages area
+     */
     private JPanel lowerPanel;
 
+    /**
+     * The text area for displaying messages or feedback to the user
+     */
     private JTextArea messagesArea;
 
     /**

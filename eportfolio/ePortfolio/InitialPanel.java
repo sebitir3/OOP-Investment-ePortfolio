@@ -8,8 +8,16 @@ import java.awt.*;
  */
 public class InitialPanel extends JPanel{
     
+    /**
+     * A text field for displaying a brief welcome message to the user
+     */
     private JTextField welcome;
+
+    /**
+     * A text area for displaying additional information or instructions related to the welcome message
+     */
     private JTextArea welcomeInfo;
+
 
     /**
      * Constructs InitalPanel for the GUI
