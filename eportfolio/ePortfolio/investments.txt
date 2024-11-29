@@ -9,6 +9,6 @@ type = "mutualfund"
 symbol = "SSETX"
 name = "BNY Mellon Growth Fund Class I"
 quantity = "450"
-price = "42.21"
+price = "43.0"
 bookValue = "23967.0"
 

@@ -250,8 +250,19 @@ public class UpdatePanel extends JPanel implements ActionListener, MessageListen
             portfolio.updateInvesments(0, true, false);
 
         } else if (buttonCommand.equals("Save")){
-            double updatePrice = Double.parseDouble(priceField.getText().trim());
-            portfolio.updateInvesments(updatePrice, true, true);
+            try{
+                try{
+                    double updatePrice = Double.parseDouble(priceField.getText().trim());
+                    portfolio.updateInvesments(updatePrice, true, true);
+                } catch (NumberFormatException notNum){
+                    throw new IllegalArgumentException("Price must be a valid number.");
+                }
+                
+            } catch (IllegalArgumentException em) {
+                messagesArea.setText("Error: " + em.getMessage() + "\n");
+            }
+            
+            
         }
     }
 

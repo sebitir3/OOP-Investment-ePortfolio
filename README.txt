@@ -13,57 +13,66 @@ as they are not being validated with actual stock and mutual funds in the real w
 The program is limited by the fact that the user has to manually update the prices of the
 investments where normally the prices themselves would automatically update periodically.
 
-For the menu loop, accepted options for all investment functions is either the first word
-of the function name (b, s, u, g, se) or the whole word (buy, sell, update, gain, search). These
-inputs are also case insensitive. These input options were chosen as they are the most logical
-options that a user would input.
-
-The same goes for inputing a stock or mutual fund, being that the user can input the entire
-word (stock, mutual fund) or the first letter of each (s, m) all case insensitive as well.
-
 3) USER GUIDE:
 Compilition and execution:
-Run the following in a terminal from the main project folder (i.e. stiriba_a1)
+Run the following in a terminal from the main project folder (i.e. stiriba_a3)
 $ javac ePortfolio/*.java
-$ jar cvfe A2.jar ePortfolio.Portfolio <filename> ePortfolio/*.class
-$ java -jar A2.jar
+$ jar cvfe A3.jar ePortfolio.GUI <filename> ePortfolio/*.class
+$ java -jar A3.jar
 
 Here, filename is optional. If not specified it will write to "default.txt".
 
-A menu of options will then be presented to the user.
-First, (1) Buy option should be selected first to buy your investment
+An initial window will pop up and explain to the user than they are within the ePortfolio and the different functions
+are found within the menu. The menu options are ...
 
-From there, you have the option to ...
-(1) Buy --> buys more investments (new or currently owned investments).
+(1) Buy --> buys more investments (stock or mutual fund from the dropdown menu).
 
-The user will get prompted to enter the symbol of the investment. If its a new
-investment being entered the user will be asked to input the name, along with
-quantity being purchased, and the price at purchase time.
+To buy, the user must enter the symbol, the name, along with
+quantity being purchased, and the price at purchase time of the investment. 
 
-If the investment already exists, the name is not required to be entered,
-and the user will be asked to enter quantity and price as usual.
+Once all these are fields are full the user can press the buy button and the purchase
+will be confirmed in the message console.
+
+The reset button clears all fields.
+
+*All fields must be full to complete a purchase. Price and quanitity must be positive, non zero numbers.
 
 (2) Sell --> sell investments that you currently own
 
-The user will be prompted to enter a symbol of an investment they own.
-If a symbol is not owned, the operation will stop and you must select the (2) option again.
+To sell, the user must enter the symbol, along with
+quantity being sold, and the price at time of sale of the investment. 
 
-When a symbol is found, the user will be prompted to input the quantity of investment being
-sold as well as the price at time of sale.
+Once all these are fields are full the user can press the sell button and the sale
+will be confirmed in the message console.
+
+The reset button clears all fields.
+
+*All fields must be full to complete a sale. Price and quanitity must be positive, non zero numbers.
 
 (3) Update Price --> allows you to change the price of all your investments
 
-The program will view every investment and the user will be asked to input a new price
-for each investment.
+To update a price of an investment, the user must enter the 
+new desired price of the investment within the price field of the invesment.
+The symbol and name fields cannot be modified.
+
+The next and previous buttons cycle through the list of investments for
+the user to be able to modify them.
+
+Once all these are fields are full the user can press the sell button and the sale
+will be confirmed in the message console.
+
+The reset button clears all fields.
+
+*Price must be a positive, non zero number.
 
 (4) Get Gain --> displays the current gain of all investments
 
-No user input required besides selecting option (4). Automatically displays current
-investment gain.
+No user input required. Automatically displays current
+investment gain and the individual gains of each investment.
 
 (5) Search --> return the investment depending on search filters for symbol, keyword, and price range
 
-The user is asked to input search filters for symbol, keyword and a price range.
+To search, the user must input search filters for symbol, keyword and a price range.
 They DO NOT all have to be entered and if user wants to not use a filter, it can be left blank.
 
 The symbol filter: the user can enter a symbol of an investment they want to search for (case insensitive).
@@ -74,26 +83,26 @@ that includes both keywords "Apple" and "Inc")
 
 The price range filter: the user can input a price range of investments they want to search for.
 
-A full range should be inputed as "0-100". This searches for investments between $0 and $100 inclusive.
-A lower bound range should be inputed as "0-". This searches for investments above $0 inclusive.
-An upper bound range should be inputed as "-100". This searches for investments below $100 inclusive.
-An exact price should be inputed as "100". This searches for investments priced at exactly $100.
+A lower bound and upper bound can be specified to filter the prices of your investments.
+
+The reset button clears all fields.
+
+*The lower bound must be lower than the higher bound.
 
 4) TEST PLAN:
-MENU LOOP TESTING
-Test: if all inputs (buy or b case insensitive, sell or s case insensitive etc.) enter each function ✔
-      enter values outside of the cases; test if loop asks for another option to be entered ✔
-
 INVESTMENT FUNCTION TESTING:
 
+GUI:
+Test: if all panels appear as they should and all buttons / interactable components do the tasks below
+      if appropriate confirmation / error messages appear in the consoles of each panel
+
+
 Buy
-Test: if input for buying stock is accepted as 'stock' or 's' case insensitive and input for buying mutual fund is accepted as 'mutual fund' or 'm' ✔
-      if symbol is found or not --> if not enter name for new investment, then quantity and price; else enter the quantity and price of the found investment ✔
+Test: if symbol is found or not --> if not enter name for new investment, then quantity and price; else enter the quantity and price of the found investment ✔
       validate numerical inputs for quanitity and price using helper validate methods making sure price and quantity are larger than 0 ✔
 
 Sell
-Test: if input for selling stock is accepted as 'stock' or 's' case insensitive and input for selling mutual fund is accepted as 'mutual fund' or 'm' ✔
-      if symbol is found or not --> exit function if not found, continue with sell inputs if symbol found
+Test: if symbol is found or not --> exit function if not found, continue with sell inputs if symbol found
       validate numerical inputs for quanitity and price using helper validate methods making sure price and quantity are larger than 0 ✔
       if list of chosen investment is empty, don't sell ✔
 
@@ -103,6 +112,7 @@ Test: if inputs for the updated prices are numbers or not: i.e. try strings/garb
 
 Gain
 Test: do the math and see if correct output is printed when calculating the theoretical gain of all investments ✔
+      if each investment's gain appears in the console
 
 Search
 Test: all combinations of symbol, keywords, and ranges --> i.e. if some left blank, it still searches for remaining filters ✔
@@ -110,8 +120,7 @@ Test: all combinations of symbol, keywords, and ranges --> i.e. if some left bla
       if lowercase string is accepted as a symbol search filter ✔
       if all keyword are found within the name of an investment (must contain all keywords entered) ✔
       if all types of ranges and edge cases work ✔
-            i.e.(exact value, range above, range below, full range, and ranges that don't make sense such as 500-100) ✔
-            also test for an invalid range input that doesn't have spaces between two numbers with no hiphen '-'
+            i.e.(range above, range below, full range, and ranges that don't make sense such as 500-100) ✔
             --> return an error and exit the search loop ✔
       if no investment found --> message should be printed that none were found ✔
 
@@ -121,6 +130,7 @@ Test: that upon buy and sell function calls that the indices of all the keywords
 
 Exit
 Test: if program is terminated ✔
+      if program closes only on quit selection option so file write occurs ✔
 
 Read & Write to file
 Test: if program accepts command line argument file name --> if so make sure to loop through array list of investments and see if all information was read in ✔
@@ -131,8 +141,6 @@ Test: if program accepts command line argument file name --> if so make sure to 
             and set file to write to as default.txt ✔
 
 5) IMPROVEMENTS TO DO:
-
-For later versions, simplify add UI to help user experience with the program; terminal has its visual limitations; use java GUI
 
 Bigger picture: investment price information could be pulled from a database of prices to allow for automatic and
 periodic price changes so the user can save time when calculating the gain on their investments.

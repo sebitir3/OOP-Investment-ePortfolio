@@ -126,7 +126,9 @@ public class Portfolio{
             if(!investmentFound && !duplicateSymbol) {
                 // NEW STOCK
                 if(buyInvestType.equalsIgnoreCase("stock")){    
-                    Stock inputStock = new Stock(symbolToBuy, nameToBuy, 0, 0, 0);
+                    Stock inputStock = new Stock();
+                    inputStock.setSymbol(symbolToBuy);
+                    inputStock.setName(nameToBuy);
             
                     // buy shares of the stock (sets quantity, price, and bookvalue)
                     purchaseBookValue = inputStock.buy(quantityToBuy, priceToBuy);
@@ -142,7 +144,9 @@ public class Portfolio{
                 } 
                 // NEW MUTUAL FUND
                 else if (buyInvestType.equalsIgnoreCase("mutual fund")){
-                    MutualFund inputMutualFund = new MutualFund(symbolToBuy, nameToBuy, 0, 0, 0);
+                    MutualFund inputMutualFund = new MutualFund();
+                    inputMutualFund.setSymbol(symbolToBuy);
+                    inputMutualFund.setName(nameToBuy);
                 
                     // buy shares of the stock (sets quantity, price, and bookvalue)
                     purchaseBookValue = inputMutualFund.buy(quantityToBuy, priceToBuy);
@@ -442,25 +446,34 @@ public class Portfolio{
                     }
                 }
 
-                // check if lower bound is not empty
-                if(!lowerBound.isEmpty()){
-                    double lowerValue = Double.parseDouble(lowerBound);
-                    // see if stock price falls below lower bound
-                    // if so dont print the stock
-                    if (listOfInvestments.get(j).getPrice() < lowerValue){
-                        foundInvestment = false;
+                try {
+                    // check if lower bound is not empty
+                    if(!lowerBound.isEmpty()){
+                        double lowerValue = Double.parseDouble(lowerBound);
+                        // see if stock price falls below lower bound
+                        // if so dont print the stock
+                        if (listOfInvestments.get(j).getPrice() < lowerValue){
+                            foundInvestment = false;
+                        }
                     }
+                } catch (NumberFormatException notNum) {
+                    throw new IllegalArgumentException("Low price must be a valid integer.");
                 }
-
-                // check if upper bound is not empty
-                if (!upperBound.isEmpty()) {
-                    double upperValue = Double.parseDouble(upperBound);
-                    // see if stock price is above upper bound
-                    // if so dont print stock
-                    if (listOfInvestments.get(j).getPrice() > upperValue) {
-                        foundInvestment = false;
+                
+                try {
+                    // check if upper bound is not empty
+                    if (!upperBound.isEmpty()) {
+                        double upperValue = Double.parseDouble(upperBound);
+                        // see if stock price is above upper bound
+                        // if so dont print stock
+                        if (listOfInvestments.get(j).getPrice() > upperValue) {
+                            foundInvestment = false;
+                        }
                     }
+                } catch (NumberFormatException notNum) {
+                    throw new IllegalArgumentException("High price must be a valid integer.");
                 }
+                
 
                 if(!upperBound.isEmpty() && !lowerBound.isEmpty()){
                     double lowerValue = Double.parseDouble(lowerBound);

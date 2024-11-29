@@ -245,10 +245,23 @@ public class SellPanel extends JPanel implements ActionListener, MessageListener
                     throw new IllegalArgumentException("Price cannot be left blank.");
                 }
 
-                int quantity = Integer.parseInt(quantityField.getText().trim());
-                double price = Double.parseDouble(priceField.getText().trim());
+                int quantity;
+                double price;
 
-                
+                // Check if quantity is a valid number
+                try {
+                    quantity = Integer.parseInt(quantityText);
+                } catch (NumberFormatException notNum) {
+                    throw new IllegalArgumentException("Quantity must be a valid integer.");
+                }
+
+                // Check if price is a valid number
+                try {
+                    price = Double.parseDouble(priceText);
+                } catch (NumberFormatException notNum) {
+                    throw new IllegalArgumentException("Price must be a valid number.");
+                }
+
                 // Call the Portfolio's sellInvestments method
                 portfolio.sellInvestments(symbol, quantity, price);
 

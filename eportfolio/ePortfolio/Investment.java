@@ -51,6 +51,12 @@ public abstract class Investment {
      * @param bookValue - double for the book value
      */
     public Investment(String symbol, String name, int quantity, double price, double bookValue) {
+        if (quantity <= 0) {
+            throw new IllegalArgumentException("Quantity must be greater than zero.");
+        }
+        if (price <= 0) {
+            throw new IllegalArgumentException("Price must be greater than zero.");
+        }
         this.symbol = symbol;
         this.name = name;
         this.quantity = quantity;
