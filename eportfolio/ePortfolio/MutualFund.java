@@ -44,6 +44,12 @@ public class MutualFund extends Investment{
      * @return the bookvalue of the purchase (no fee)
      */
     public double buy(int addedQuantity, double newPrice){
+        if(addedQuantity <= 0){
+            throw new IllegalArgumentException("Please enter a positive quantity.");
+        }
+        if(newPrice <= 0){
+            throw new IllegalArgumentException("Please enter a positive price.");
+        }
         this.quantity += addedQuantity;
         double buyBookValue = addedQuantity * newPrice;
         this.bookValue += buyBookValue;
@@ -69,6 +75,13 @@ public class MutualFund extends Investment{
      * @return the gain of the partial or full sale of the mutual fund
      */
     public double sell(int sellQuantity, double salePrice, ArrayList<Investment> inputList, int i){
+        if(sellQuantity <= 0){
+            throw new IllegalArgumentException("Please enter a positive quantity.");
+        }
+        if(salePrice <= 0){
+            throw new IllegalArgumentException("Please enter a positive price.");
+        }
+
         // vars for calculating book value 
         double payment = sellQuantity * salePrice - FEE;
         double gain;

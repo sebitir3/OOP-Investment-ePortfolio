@@ -204,10 +204,26 @@ public class BuyPanel extends JPanel implements ActionListener, MessageListener{
             quantityField.setText("");
             priceField.setText("");
         } else if (buttonCommand.equals("Buy")){
-            //try {
+            try {
                 String type = (String) typeField.getSelectedItem();
                 String symbol = symbolField.getText().trim();
                 String name = nameField.getText().trim();
+                String quantityText = quantityField.getText().trim();
+                String priceText = priceField.getText().trim();
+                
+                if(symbol.isEmpty()){
+                    throw new IllegalArgumentException("Symbol cannot be left blank.");
+                }
+                if(name.isEmpty()){
+                    throw new IllegalArgumentException("Name cannot be left blank.");
+                }
+                if(quantityText.isEmpty()){
+                    throw new IllegalArgumentException("Quantity cannot be left blank.");
+                }
+                if(priceText.isEmpty()){
+                    throw new IllegalArgumentException("Price cannot be left blank.");
+                }
+
                 int quantity = Integer.parseInt(quantityField.getText().trim());
                 double price = Double.parseDouble(priceField.getText().trim());
         
@@ -215,14 +231,14 @@ public class BuyPanel extends JPanel implements ActionListener, MessageListener{
                 portfolio.buyInvestments(type, symbol, name, quantity, price);
 
                 symbolField.setText("");
-                nameField.setText("");;
-                quantityField.setText("");;
-                priceField.setText("");;
+                nameField.setText("");
+                quantityField.setText("");
+                priceField.setText("");
         
                 // Provide feedback to the user
-            //} catch (NumberFormatException ex) {
-                //messagesArea.append("Invalid input. Please check your fields.\n");
-            //}
+            } catch (IllegalArgumentException em) {
+                messagesArea.setText("Error: " + em.getMessage() + "\n");
+            }
         }
     }
 
