@@ -3,11 +3,17 @@ package ePortfolio;
 import javax.swing.*;
 import java.awt.*;
 
+/**
+ * The IntialPanel class represents the boot up panel in the GUI.
+ */
 public class InitialPanel extends JPanel{
     
     private JTextField welcome;
     private JTextArea welcomeInfo;
 
+    /**
+     * Constructs InitalPanel for the GUI
+     */
     public InitialPanel() {
         //setSize(600, 600);
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));

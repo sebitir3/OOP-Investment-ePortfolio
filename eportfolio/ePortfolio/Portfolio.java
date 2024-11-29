@@ -13,7 +13,7 @@ import java.util.*;
  */
 public class Portfolio{
     // vars for investments
-    private static ArrayList<Investment> listOfInvestments = new ArrayList<>();
+    public ArrayList<Investment> listOfInvestments = new ArrayList<>();
     private static double gainSum = 0;
 
     // keyword hashmap
@@ -34,8 +34,6 @@ public class Portfolio{
         this.gui = gui;
     }
 
-    // METHODS FOR MAIN
-
     // implement messageListener
     public void setMessageListener(MessageListener listener) {
         this.messageListener = listener;
@@ -46,7 +44,11 @@ public class Portfolio{
     /**
      * This methods allows the user to buy a stock or a mutual fund
      * 
-     * @param scanner - for user inputs
+     * @param buyInvestType string from buyPanel combo box
+     * @param symbolToBuy string from buyPanel textfield
+     * @param nameToBuy string from buyPanel textfield
+     * @param quantityToBuy int from buyPanel textfield
+     * @param priceToBuy double from buyPanel textfield
      */
     public void buyInvestments(String buyInvestType, String symbolToBuy, String nameToBuy, int quantityToBuy, double priceToBuy){
         try{     
@@ -158,7 +160,9 @@ public class Portfolio{
     /**
      * This methods allows the user to sell a stock or a mutual fund
      *
-     * @param scanner - for user inputs
+     * @param symbolToSell string from sellPanel textfield
+     * @param quantityToSell int from sellPanel textfield
+     * @param priceToSell double from sellPanel textfield
      */
     public void sellInvestments(String symbolToSell, int quantityToSell, double priceToSell){
         try {
@@ -253,7 +257,9 @@ public class Portfolio{
      * This methods allows the user to update all prices
      * of stocks and mutual funds
      * 
-     * @param scanner - for user inputs
+     * @param updatedPrice double from updatePanel textfield 
+     * @param increasedPos if we are moving forward or backwards in investment list
+     * @param saved if we are saving the update price or not
      */
     public void updateInvesments(double updatedPrice, boolean increasedPos, boolean saved){
         try{
@@ -354,7 +360,10 @@ public class Portfolio{
      * stocks and mutual funds with 3 filters:
      * symbol, keywords and range
      * 
-     * @param scanner - for user input
+     * @param symbolSearch symbol to search for in list of investments
+     * @param keywordSearch keywords to search for in list of investments
+     * @param lowerBound search for investments greater than this price
+     * @param upperBound search for investments lower than this price
      */
     public void searchInvestments(String symbolSearch, String keywordSearch, String lowerBound, String upperBound){
         try{
@@ -471,7 +480,7 @@ public class Portfolio{
      * 
      * @return true if no errors opening file, false if errors --> set file to default.txt
      */
-    private boolean loadInvestments(String filename){
+    public boolean loadInvestments(String filename){
         // file scanner
         Scanner inputStream = null;
         try {
@@ -508,6 +517,8 @@ public class Portfolio{
                 }
             }
             System.out.println("Investments loaded from file.");
+            // update hash map after reading from file
+            updateHash(listOfInvestments, index, keywordIndices);
             return true;
         } catch (Exception e) {
             // error reading file exception
@@ -521,7 +532,7 @@ public class Portfolio{
      * 
      * @param filename - the file name to load from
      */
-    private void writeInvestments(String filename) {
+    public void writeInvestments(String filename) {
         // create print writer to write to file
         try (PrintWriter writer = new PrintWriter(new FileWriter(filename))) {
             // iterate through all investments and write to destination file
@@ -543,7 +554,13 @@ public class Portfolio{
         }
     }
 
-    // update hash table for search
+    /**
+     * This methods writes all investments from the investment array list into a file
+     * 
+     * @param inputList the array list we are iterating through
+     * @param index the hashmap we are updating
+     * @param keywordIndices the second array list we are storing intersected keywords in
+     */
     private void updateHash(ArrayList<Investment> inputList, HashMap<String, ArrayList<Integer>> index, ArrayList<Integer> keywordIndices){
         // clear the hash table before updating the hash table (specifically in the case of sell to ensure fully sold investments are removed from hashmap)
         index.clear();

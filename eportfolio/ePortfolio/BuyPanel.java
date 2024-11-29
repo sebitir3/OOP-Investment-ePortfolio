@@ -8,6 +8,9 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+/**
+ * The BuyPanel class represents the panel in the GUI where users can buy investments.
+ */
 public class BuyPanel extends JPanel implements ActionListener, MessageListener{
     private Portfolio portfolio;
 
@@ -33,6 +36,11 @@ public class BuyPanel extends JPanel implements ActionListener, MessageListener{
 
     private JTextArea messagesArea;
 
+    /**
+     * Constructs BuyPanel for the GUI
+     *
+     * @param portfolio instance to call functions
+     */
     public BuyPanel(Portfolio portfolio) {
         this.portfolio = portfolio;
         portfolio.setMessageListener(this);
@@ -195,6 +203,11 @@ public class BuyPanel extends JPanel implements ActionListener, MessageListener{
         add(lowerPanel);
     }
 
+    /**
+     * Reacts to button events
+     *
+     * @param e event captured from buttons
+     */
     @Override
     public void actionPerformed(ActionEvent e) {
         String buttonCommand = e.getActionCommand();
@@ -242,16 +255,36 @@ public class BuyPanel extends JPanel implements ActionListener, MessageListener{
         }
     }
 
+    /**
+     * Appends a message to the messages area.
+     *
+     * @param message the message to append
+     */
     @Override
     public void appendMessage(String message) {
         messagesArea.append(message + "\n");
     }
     
+    /**
+     * Replaces the current content of the messages area with a new message.
+     *
+     * @param message the message to display
+     */
     @Override
     public void setMessage(String message) {
         messagesArea.setText(message + "\n");
     }
     
+    /**
+     * Sets the input fields with specified values.
+     * 
+     * This method is a placeholder to allow integration with other panels
+     * or components that might pre-fill fields with specific data.
+     *
+     * @param symbol the symbol to set in the symbol field
+     * @param name the name to set in the name field
+     * @param price the price to set in the price field
+     */
     @Override
     public void setFields(String symbol, String name, String price) {}
 }
