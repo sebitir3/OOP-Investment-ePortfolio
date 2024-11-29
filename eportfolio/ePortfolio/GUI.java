@@ -11,17 +11,51 @@ import java.io.IOException;
  */
 public class GUI extends JFrame implements ActionListener{
 
+        /**
+     * The layout manager used for switching between different panels in the main container panel.
+     */
     private CardLayout cardLayout;
+
+    /**
+     * The main container panel that holds and manages all the different functional panels using a CardLayout.
+     */
     private JPanel containerPanel;
 
+    /**
+     * The shared portfolio instance used across all panels to manage investment operations.
+     */
     private static Portfolio portfolio;
+
+    /**
+     * The file path for loading or saving the portfolio data.
+     */
     private static String filePath;
-    
+
+    /**
+     * The panel responsible for handling the "Buy Investment" functionality.
+     */
     private BuyPanel buyPanel;
+
+    /**
+     * The panel responsible for handling the "Sell Investment" functionality.
+     */
     private SellPanel sellPanel;
+
+    /**
+     * The panel responsible for handling the "Update Investment" functionality.
+     */
     private UpdatePanel updatePanel;
+
+    /**
+     * The panel responsible for calculating and displaying total gains from the portfolio.
+     */
     private GainPanel gainPanel;
+
+    /**
+     * The panel responsible for handling the search functionality to find investments based on criteria.
+     */
     private SearchPanel searchPanel;
+
 
      /**
      * Constructs the GUI for the ePortfolio
