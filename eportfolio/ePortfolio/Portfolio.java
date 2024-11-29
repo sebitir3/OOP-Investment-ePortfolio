@@ -182,10 +182,6 @@ public class Portfolio{
                             while(quantityToSell > stockSold.getQuantity()){
                                 gui.handleSellAction("Error: Not enough shares owned to sell.");
                             }
-
-                            // validate input price to sell
-                            //priceToSell = priceValidation(scanner, priceToSell, stockMode);
-
                             // for full purchase, index is removed so we must store the name of the stock in a temp var
                             String tempName = stockSold.getName();
                             
@@ -238,11 +234,9 @@ public class Portfolio{
                         }        
                     }    
                 } 
-
                 if(!sellFound){
                     gui.handleSellAction("Error: " + symbolToSell + " Investment was not found.");
                 }
-            
             } else {
                 gui.handleSellAction("Error: You have no investments to sell.");
             }
@@ -251,7 +245,6 @@ public class Portfolio{
         } catch (IllegalArgumentException e) {
             gui.handleSellAction("Error: " + e.getMessage() + "\n");
         }
-        
     }
       
     // UPDATE ALL PRICES OF STOCKS AND MUTUAL FUNDS
@@ -262,65 +255,55 @@ public class Portfolio{
      * @param scanner - for user inputs
      */
     public void updateInvesments(double updatedPrice, boolean increasedPos, boolean saved){
-        // UPDATE PRICES FOR ALL INVESTMENTS
-        if(!saved){ // don't change the position if saving
-            if(increasedPos){
-                investmentPos++;
-                if(investmentPos >= listOfInvestments.size()){
-                    investmentPos = 0;
+        try{
+            // UPDATE PRICES FOR ALL INVESTMENTS
+            if(!saved){ // don't change the position if saving
+                if(increasedPos){
+                    investmentPos++;
+                    if(investmentPos >= listOfInvestments.size()){
+                        investmentPos = 0;
+                    }
+                } else if (!increasedPos){
+                    investmentPos--;
+                    if(investmentPos < 0){
+                        investmentPos = listOfInvestments.size() - 1;
+                    }
                 }
-            } else if (!increasedPos){
-                investmentPos--;
-                if(investmentPos < 0){
-                    investmentPos = listOfInvestments.size() - 1;
+                }
+
+                if(!listOfInvestments.isEmpty()){
+                // if the current investment is a stock object
+                if(listOfInvestments.get(investmentPos) instanceof Stock){
+                    // create new stock object by downcasting current investment
+                    Stock updatedStock = (Stock)listOfInvestments.get(investmentPos);
+
+                    // print current price
+                    gui.handleUpdateFields(updatedStock.getSymbol(), updatedStock.getName(), df.format(updatedStock.getPrice()));
+
+                    if(saved){
+                        updatedStock.setPrice(updatedPrice);
+                        gui.handleUpdateFields(updatedStock.getSymbol(), updatedStock.getName(), df.format(updatedStock.getPrice()));
+                        gui.handleUpdateMessage("The updated price for " + updatedStock.getSymbol() + " is: $" + df.format(updatedStock.getPrice()));
+                    }
+                } 
+                // if the current investment is a mutual fund object
+                else if(listOfInvestments.get(investmentPos) instanceof MutualFund){
+                    // create new mutual fund object by downcasting current investment
+                    MutualFund updatedFund = (MutualFund)listOfInvestments.get(investmentPos);
+
+                    // print current price
+                    gui.handleUpdateFields(updatedFund.getSymbol(), updatedFund.getName(), df.format(updatedFund.getPrice()));
+
+                    if(saved){
+                        updatedFund.setPrice(updatedPrice);
+                        gui.handleUpdateFields(updatedFund.getSymbol(), updatedFund.getName(), df.format(updatedFund.getPrice()));
+                        gui.handleUpdateMessage("The updated price for " + updatedFund.getSymbol() + " is: $" + df.format(updatedFund.getPrice()));
+                    }
                 }
             }
+        } catch (IllegalArgumentException e) {
+            gui.handleUpdateMessage("Error: " + e.getMessage() + "\n");
         }
-        
-        boolean updatingAStock = true;  
-        // if the current investment is a stock object
-        if(listOfInvestments.get(investmentPos) instanceof Stock){
-            // for price validation
-            updatingAStock = true;
-
-            // create new stock object by downcasting current investment
-            Stock updatedStock = (Stock)listOfInvestments.get(investmentPos);
-
-            // print current price
-            gui.handleUpdateFields(updatedStock.getSymbol(), updatedStock.getName(), df.format(updatedStock.getPrice()));
-
-            System.out.println();
-
-            if(saved){
-                updatedPrice = priceValidationForUpdate(updatedPrice, updatingAStock);
-
-                updatedStock.setPrice(updatedPrice);
-                gui.handleUpdateFields(updatedStock.getSymbol(), updatedStock.getName(), df.format(updatedStock.getPrice()));
-                gui.handleUpdateMessage("The updated price for " + updatedStock.getSymbol() + " is: $" + df.format(updatedStock.getPrice()));
-            }
-        } 
-        // if the current investment is a mutual fund object
-        else if(listOfInvestments.get(investmentPos) instanceof MutualFund){
-            // for price validation
-            updatingAStock = false;
-
-            // create new mutual fund object by downcasting current investment
-            MutualFund updatedFund = (MutualFund)listOfInvestments.get(investmentPos);
-
-            // print current price
-            gui.handleUpdateFields(updatedFund.getSymbol(), updatedFund.getName(), df.format(updatedFund.getPrice()));
-
-            if(saved){
-                //updatedFund = (MutualFund)listOfInvestments.get(investmentPos++); // fix offset from boolean
-                updatedPrice = priceValidationForUpdate(updatedPrice, updatingAStock);
-
-                updatedFund.setPrice(updatedPrice);
-                gui.handleUpdateFields(updatedFund.getSymbol(), updatedFund.getName(), df.format(updatedFund.getPrice()));
-                gui.handleUpdateMessage("The updated price for " + updatedFund.getSymbol() + " is: $" + df.format(updatedFund.getPrice()));
-            }
-            
-        }
-        
     }
 
     public void initialInvestmentShown(){
@@ -373,131 +356,112 @@ public class Portfolio{
      * @param scanner - for user input
      */
     public void searchInvestments(String symbolSearch, String keywordSearch, String lowerBound, String upperBound){
-        // clear the message area
-        gui.clearSearchMessage("");
+        try{
+            // clear the message area
+            gui.setSearchMessage("");
 
-        boolean foundInvestment = true;
-        boolean isValidRange = true;
+            boolean foundInvestment = true;
+            boolean isValidRange = true;
 
-        ArrayList<Integer> intersectedIndices = new ArrayList<>();
+            ArrayList<Integer> intersectedIndices = new ArrayList<>();
 
-        // found counter
-        int foundCount = 0;
+            // found counter
+            int foundCount = 0;
 
-        // tokenize keywords into an array
-        String[] keywords = keywordSearch.split(" ");
-        
-        // search through keywords in hashmap
-        
-        if (!keywordSearch.isEmpty()) {
-            // ITERSECT ALL SIMILAR INDICIES FOR EACH KEYWORD
-            for (int j = 0; j < keywords.length; j++) {
-                String keyword = keywords[j];
-
-                // put the first keyowrd in the intersectedIndicies array list
-                if (index.containsKey(keyword)) {
-                    ArrayList<Integer> keywordIndices = index.get(keyword);
-                    // add all indices to intersectedIndices for the first keyword
-                    if (j == 0){
-                        intersectedIndices.addAll(keywordIndices);
-                    } else {
-                        // retain all indices after the first
-                        intersectedIndices.retainAll(keywordIndices);
-                    }
-                } else {
-                    intersectedIndices.clear();
-                    break;
-                }
-            }    
-        }
-        // if no keywords are provided, include all indices in the intersectedIndices array list
-        else {
-            for (int i = 0; i < listOfInvestments.size(); i++) {
-                intersectedIndices.add(i);
-            }     
-        }
-
-        //System.out.println(intersectedIndices);        
-               
-        // SYMBOL AND RANGE CHECK
-        // iterate through intersectedIndices array list to check for symbol and range
-        for (Integer j : intersectedIndices) {
-            // set true for every investment in the list, then check set false each loop if criteria not met
-            foundInvestment = true;
+            // tokenize keywords into an array
+            String[] keywords = keywordSearch.split(" ");
             
-            // check if symbol is not empty
-            if(!symbolSearch.isEmpty()){
-                // check if symbol is not equal to current stock
-                if(!listOfInvestments.get(j).getSymbol().equalsIgnoreCase(symbolSearch)){
-                    // set to false and don't print stock
-                    //System.out.println(listOfInvestments.get(j).getSymbol());
-                    foundInvestment = false;
+            // search through keywords in hashmap
+            
+            if (!keywordSearch.isEmpty()) {
+                // ITERSECT ALL SIMILAR INDICIES FOR EACH KEYWORD
+                for (int j = 0; j < keywords.length; j++) {
+                    String keyword = keywords[j];
+
+                    // put the first keyowrd in the intersectedIndicies array list
+                    if (index.containsKey(keyword)) {
+                        ArrayList<Integer> keywordIndices = index.get(keyword);
+                        // add all indices to intersectedIndices for the first keyword
+                        if (j == 0){
+                            intersectedIndices.addAll(keywordIndices);
+                        } else {
+                            // retain all indices after the first
+                            intersectedIndices.retainAll(keywordIndices);
+                        }
+                    } else {
+                        intersectedIndices.clear();
+                        break;
+                    }
+                }    
+            }
+            // if no keywords are provided, include all indices in the intersectedIndices array list
+            else {
+                for (int i = 0; i < listOfInvestments.size(); i++) {
+                    intersectedIndices.add(i);
+                }     
+            }
+
+            //System.out.println(intersectedIndices);        
+                    
+            // SYMBOL AND RANGE CHECK
+            // iterate through intersectedIndices array list to check for symbol and range
+            for (Integer j : intersectedIndices) {
+                // set true for every investment in the list, then check set false each loop if criteria not met
+                foundInvestment = true;
+                
+                // check if symbol is not empty
+                if(!symbolSearch.isEmpty()){
+                    // check if symbol is not equal to current stock
+                    if(!listOfInvestments.get(j).getSymbol().equalsIgnoreCase(symbolSearch)){
+                        // set to false and don't print stock
+                        //System.out.println(listOfInvestments.get(j).getSymbol());
+                        foundInvestment = false;
+                    }
+                }
+
+                // check if lower bound is not empty
+                if(!lowerBound.isEmpty()){
+                    double lowerValue = Double.parseDouble(lowerBound);
+                    // see if stock price falls below lower bound
+                    // if so dont print the stock
+                    if (listOfInvestments.get(j).getPrice() < lowerValue){
+                        foundInvestment = false;
+                    }
+                }
+
+                // check if upper bound is not empty
+                if (!upperBound.isEmpty()) {
+                    double upperValue = Double.parseDouble(upperBound);
+                    // see if stock price is above upper bound
+                    // if so dont print stock
+                    if (listOfInvestments.get(j).getPrice() > upperValue) {
+                        foundInvestment = false;
+                    }
+                }
+
+                if(!upperBound.isEmpty() && !lowerBound.isEmpty()){
+                    double lowerValue = Double.parseDouble(lowerBound);
+                    double upperValue = Double.parseDouble(upperBound);
+                    if (lowerValue > upperValue){
+                        throw new IllegalArgumentException("Low price cannot be larger than high price.");
+                    }
+                }
+
+                // if condition maintains true (survived all filters), then print
+                if(foundInvestment && isValidRange){
+                    gui.handleSearchMessage(listOfInvestments.get(j).toString());
+                    foundCount ++;
                 }
             }
-
-
-            // check if lower bound is not empty
-            if(!lowerBound.isEmpty()){
-                double lowerValue = Double.parseDouble(lowerBound);
-                // see if stock price falls below lower bound
-                // if so dont print the stock
-                if (listOfInvestments.get(j).getPrice() < lowerValue){
-                    foundInvestment = false;
-                }
+            // no investments found
+            if (foundCount == 0 && isValidRange){
+                gui.handleSearchMessage("No investments found.");
             }
-
-            // check if upper bound is not empty
-            if (!upperBound.isEmpty()) {
-                double upperValue = Double.parseDouble(upperBound);
-                // see if stock price is above upper bound
-                // if so dont print stock
-                if (listOfInvestments.get(j).getPrice() > upperValue) {
-                    foundInvestment = false;
-                }
-            }
-
-            // if condition maintains true (survived all filters), then print
-            if(foundInvestment && isValidRange){
-                gui.handleSearchMessage(listOfInvestments.get(j).toString());
-                foundCount ++;
-            }
+        } catch (IllegalArgumentException e) {
+            gui.setSearchMessage("Error: " + e.getMessage() + "\n");
         }
-        
-        // no investments found
-        if (foundCount == 0 && isValidRange){
-            gui.handleSearchMessage("No investments found.");
-        }
+       
     }     
-
-    /**
-     * This methods validates correct input for price FOR THE UPDATE FUNCTION
-     * (must be an double greater than 0). The user is repeatedly
-     * asked to input a correct price value and when recieved, 
-     * the value is returned
-     *
-     * @param scanner - for user inputs
-     * @param validPrice - the price value to validate
-     * @param ifStock - if stock or mutual fund
-     */
-    private double priceValidationForUpdate(double validPrice, boolean ifStock){
-        boolean validInput = false;
-
-        // loop until valid input   
-        while (!validInput){
-            try {
-                // only exit the loop if price is a positive number
-                if (validPrice <= 0){
-                    System.out.println("Enter a positive price.");
-                } else {
-                    validInput = true;
-                }
-            // throw input mismatch exception and ask again until valid
-            } catch (InputMismatchException e){
-                System.out.println("Invalid input. Please enter a number.");
-            }
-        }
-        return validPrice;
-    }
 
     /**
      * This methods loads all investments into the investment array list from a file

@@ -117,6 +117,9 @@ public abstract class Investment {
      * @param quantity - value to set investment's quantity
      */
     public void setQuantity(int quantity) {
+        if(quantity <= 0){
+            throw new IllegalArgumentException("Please enter a positive quantity.");
+        }
         this.quantity = quantity;
     }
 
@@ -136,6 +139,9 @@ public abstract class Investment {
      * @param price - value to set investment's price
      */
     public void setPrice(double price) {
+        if(price <= 0){
+            throw new IllegalArgumentException("Please enter a positive price.");
+        }
         this.price = price;
     }
 

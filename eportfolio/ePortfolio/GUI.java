@@ -148,7 +148,7 @@ public class GUI extends JFrame implements ActionListener{
     }
 
     // search communication
-    public void clearSearchMessage(String message) {
+    public void setSearchMessage(String message) {
         searchPanel.setMessage(message);
     }
 

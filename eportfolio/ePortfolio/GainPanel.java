@@ -48,6 +48,7 @@ public class GainPanel extends JPanel implements MessageListener{
         gainField = new JTextField();
         gainField.setPreferredSize(new Dimension(200, 25));
         gainField.setFont(new Font("Helvetica", Font.PLAIN, 13));
+        gainField.setEditable(false);
 
         // Add labels and fields to fieldListPanel with GridBagLayout
         gbc.gridx = 0;

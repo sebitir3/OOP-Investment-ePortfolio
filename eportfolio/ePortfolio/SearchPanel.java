@@ -175,7 +175,6 @@ public class SearchPanel extends JPanel implements ActionListener, MessageListen
         messagesArea.setFont(new Font("Helvetica", Font.PLAIN, 13));
         messagesArea.setEditable(false);
 
-
         // scroll pane
         JScrollPane scrollBars = new JScrollPane(messagesArea);
         scrollBars.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
@@ -197,7 +196,7 @@ public class SearchPanel extends JPanel implements ActionListener, MessageListen
             lowField.setText("");
             highField.setText("");
         } else if (buttonCommand.equals("Search")){
-            //try {
+            try {
                 String symbol = symbolField.getText().trim();
                 String searchKey = nameKeyField.getText().trim().toLowerCase();
                 String low = lowField.getText().trim();
@@ -208,13 +207,11 @@ public class SearchPanel extends JPanel implements ActionListener, MessageListen
                 lowField.setText("");
                 highField.setText("");
         
-                // Call the Portfolio's buyInvestments method
                 portfolio.searchInvestments(symbol, searchKey, low, high);
         
-                // Provide feedback to the user
-            //} catch (NumberFormatException ex) {
-                //messagesArea.append("Invalid input. Please check your fields.\n");
-            //}
+            } catch (IllegalArgumentException em) {
+                messagesArea.setText("Error: " + em.getMessage() + "\n");
+            }
         }
     }
 
