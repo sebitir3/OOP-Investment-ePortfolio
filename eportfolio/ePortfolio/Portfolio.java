@@ -100,7 +100,7 @@ public class Portfolio{
                 
                         // check if the symbol is a stock and print error if true
                         if (listOfInvestments.get(i) instanceof Stock && symbolToBuy.equals(listOfInvestments.get(i).getSymbol())){
-                            System.out.println("Error. This symbol already exists as a stock.");
+                            gui.handleBuyAction("Error. This symbol already exists as a stock.");
                             duplicateSymbol = true;
                         } 
                         // check if mutual fund already exists in array list
