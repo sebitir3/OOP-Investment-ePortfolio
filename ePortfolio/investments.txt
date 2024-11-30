@@ -1,0 +1,14 @@
+type = "stock"
+symbol = "AAPL"
+name = "Apple Inc."
+quantity = "498"
+price = "144.0"
+bookValue = "54829.19"
+
+type = "mutualfund"
+symbol = "SSETX"
+name = "BNY Mellon Growth Fund Class I"
+quantity = "450"
+price = "23.0"
+bookValue = "10350.0"
+
