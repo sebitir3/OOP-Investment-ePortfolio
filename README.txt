@@ -17,8 +17,8 @@ investments where normally the prices themselves would automatically update peri
 Compilition and execution:
 Run the following in a terminal from the main project folder (i.e. stiriba_a3)
 $ javac ePortfolio/*.java
-$ jar cvfe A3.jar ePortfolio.GUI <filename> ePortfolio/*.class
-$ java -jar A3.jar
+$ jar cvfe A3.jar ePortfolio.GUI ePortfolio/*.class
+$ java -jar A3.jar <filename>
 
 Here, filename is optional. If not specified it will write to "default.txt".
 

@@ -292,14 +292,14 @@ public class BuyPanel extends JPanel implements ActionListener, MessageListener{
                 int quantity;
                 double price;
 
-                // Check if quantity is a valid number
+                // check if quantity is a valid number
                 try {
                     quantity = Integer.parseInt(quantityText);
                 } catch (NumberFormatException notNum) {
                     throw new IllegalArgumentException("Quantity must be a valid integer.");
                 }
 
-                // Check if price is a valid number
+                // check if price is a valid number
                 try {
                     price = Double.parseDouble(priceText);
                 } catch (NumberFormatException notNum) {

@@ -450,6 +450,9 @@ public class Portfolio{
                     // check if lower bound is not empty
                     if(!lowerBound.isEmpty()){
                         double lowerValue = Double.parseDouble(lowerBound);
+                        if(lowerValue <= 0){
+                            throw new IllegalArgumentException("Low price must be greater than zero.");
+                        }
                         // see if stock price falls below lower bound
                         // if so dont print the stock
                         if (listOfInvestments.get(j).getPrice() < lowerValue){
@@ -464,6 +467,9 @@ public class Portfolio{
                     // check if upper bound is not empty
                     if (!upperBound.isEmpty()) {
                         double upperValue = Double.parseDouble(upperBound);
+                        if(upperValue <= 0){
+                            throw new IllegalArgumentException("High price must be greater than zero.");
+                        }
                         // see if stock price is above upper bound
                         // if so dont print stock
                         if (listOfInvestments.get(j).getPrice() > upperValue) {
